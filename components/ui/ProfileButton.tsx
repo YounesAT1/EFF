@@ -15,7 +15,7 @@ import { User, LogOut } from "lucide-react";
 import Link from "next/link";
 
 const ProfileButton = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
     <div className="mr-6">
@@ -44,13 +44,15 @@ const ProfileButton = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (
-        <Button
-          className="flex items-center justify-between gap-2 mr-6"
-          variant="default"
-        >
-          <User />
-          <h1>Log in</h1>
-        </Button>
+        <Link href="sign-in">
+          <Button
+            className="flex items-center justify-between gap-2 mr-6"
+            variant="default"
+          >
+            <User />
+            <h1>Sign in</h1>
+          </Button>
+        </Link>
       )}
     </div>
   );

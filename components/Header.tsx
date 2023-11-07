@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import { Sun, Moon, Menu } from "lucide-react";
-import ProfileButton from "./ui/ProfileButton";
+import { Sun, Moon, Menu, User } from "lucide-react";
 import Container from "./ui/Container";
 import { Button } from "./ui/Button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
@@ -41,7 +40,9 @@ const Header = () => {
         <div className="relative px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
           <div className="flex items-center">
             <Link href="/" className="ml-4 lg:ml-0">
-              <h1 className="text-xl font-bold text-purple-700 ">Travely</h1>
+              <h1 className="text-xl font-bold text-purple-700 dark:text-purple-300">
+                Travely
+              </h1>
             </Link>
           </div>
           <nav className="mx-6 flex items-center space-x-4 lg:space-x-6 hidden md:block">
@@ -57,7 +58,16 @@ const Header = () => {
             ))}
           </nav>
           <div className="flex items-center">
-            <ProfileButton />
+            {/* <ProfileButton /> */}
+            <Link href="sign-in">
+              <Button
+                className="flex items-center justify-between gap-2 mr-6"
+                variant="default"
+              >
+                <User />
+                <h1>Sign in</h1>
+              </Button>
+            </Link>
             <Button
               variant="ghost"
               size="icon"
