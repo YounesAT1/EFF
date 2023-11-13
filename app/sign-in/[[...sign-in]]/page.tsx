@@ -16,35 +16,38 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Moon, Sun } from "lucide-react";
+import { Eye, EyeOff, Moon, Plane, Sun } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
 
 const formSchema = z.object({
-  firstName: z.string().min(2, {
-    message: "Please enter a valid first name.",
-  }),
-  lastName: z.string().min(2, {
-    message: "Please enter a valid last name.",
-  }),
-  email: z.string().min(2, {
+  email: z.string().email({
     message: "Please enter a valid email.",
   }),
-  password: z.string().min(8, {
-    message: "Please enter a valid password.",
-  }),
-  passwordConfirmation: z.string().min(8, {
-    message: "Passwords do not match.",
-  }),
+  password: z
+    .string()
+    .min(8, {
+      message: "Password must be at least 8 characters long.",
+    })
+    .refine((value) => /[a-z]/.test(value), {
+      message: "Password must contain at least one lowercase letter.",
+    })
+    .refine((value) => /[A-Z]/.test(value), {
+      message: "Password must contain at least one uppercase letter.",
+    })
+    .refine((value) => /\d/.test(value), {
+      message: "Password must contain at least one number.",
+    })
+    .refine((value) => /[!@#$%^&*(),.?":{}|<>]/.test(value), {
+      message: "Password must contain at least one symbol.",
+    }),
 });
-
 const SignInPage = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
       email: "",
       password: "",
-      passwordConfirmation: "",
     },
   });
 
@@ -55,13 +58,16 @@ const SignInPage = () => {
 
   const { theme, setTheme } = useTheme();
 
+  const [showPassword, setShowPassword] = useState(false);
+  const handleTogglePassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+
   return (
     <Container>
       <header className="flex items-center justify-between px-12 p-6">
         <Link href="/" className="ml-4 lg:ml-0">
-          <h1 className="text-xl font-bold text-purple-700 dark:text-purple-300">
-            Travely
-          </h1>
+          <Image src="/travelyLogo.svg" alt="LOGO" width={120} height={48} />
         </Link>
         <Button
           variant="ghost"
@@ -74,58 +80,24 @@ const SignInPage = () => {
           <Moon className="absolute h-6 w-6 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
         </Button>
       </header>
-      <div className="flex items-center  justify-center h-full">
+      <div className="flex justify-center items-center gap-3 mb-8 ">
+        <h1 className="text-2xl text-center text-gray-600 font-bold dark:text-gray-200 ">
+          Sign In
+        </h1>
+        <Plane
+          width={28}
+          height={28}
+          className="text-gray-600  dark:text-gray-200"
+        />
+      </div>
+      <div className="flex items-center  justify-center">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8"
+            className="space-y-8 w-[450px]"
             method="POST"
+            autoComplete="off"
           >
-            <div className="flex items-center justify-center gap-2">
-              <FormField
-                control={form.control}
-                name="firstName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-l" htmlFor="firstName">
-                      First Name :
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="First Name..."
-                        {...field}
-                        id="firstName"
-                        type="text"
-                        name="firstName"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-l" htmlFor="lastName">
-                      {" "}
-                      Last Name :
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Doe"
-                        {...field}
-                        id="lastName"
-                        type="text"
-                        name="lastName"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
             <FormField
               control={form.control}
               name="email"
@@ -143,57 +115,50 @@ const SignInPage = () => {
                       name="email"
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="dark:text-red-700" />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-l" htmlFor="password">
-                    password :
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="*******"
-                      {...field}
-                      id="password"
-                      type="password"
-                      name="password"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+            <div className="flex items-center justify-between relative">
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem className="w-full ">
+                    <FormLabel className="text-l" htmlFor="password">
+                      password :
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="*******"
+                        {...field}
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        name="password"
+                      />
+                    </FormControl>
+                    <FormMessage className="dark:text-red-700" />
+                  </FormItem>
+                )}
+              />
+              {showPassword ? (
+                <Eye
+                  onClick={handleTogglePassword}
+                  className="absolute right-2 top-[2.38rem] cursor-pointer text-gray-700 dark:text-gray-200"
+                />
+              ) : (
+                <EyeOff
+                  onClick={handleTogglePassword}
+                  className="absolute right-2 top-[2.38rem] cursor-pointer text-gray-700 dark:text-gray-200"
+                />
               )}
-            />
-            <FormField
-              control={form.control}
-              name="passwordConfirmation"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-l" htmlFor="passwordConfirmation">
-                    Confirm Password :
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="********"
-                      {...field}
-                      id="passwordConfirmation"
-                      type="password"
-                      name="passwordConfirmation"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            </div>
+
             <Button type="submit" className="w-full">
               Sign in
             </Button>
             <p className="font-semibold text-gray-700 text-center dark:text-white">
-              Already a member ?{" "}
+              Do not have an accout ?{" "}
               <Link href="sign-up" className="font-bold text-purple-700">
                 Sign up
               </Link>

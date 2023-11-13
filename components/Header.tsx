@@ -2,11 +2,14 @@
 
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import { Sun, Moon, Menu, User } from "lucide-react";
+
 import Container from "./ui/Container";
 import { Button } from "./ui/Button";
-import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import Copyright from "./CopyRight";
+
+import { Sun, Moon, Menu, User } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import Image from "next/image";
 
 const routes = [
   {
@@ -40,9 +43,12 @@ const Header = () => {
         <div className="relative px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
           <div className="flex items-center">
             <Link href="/" className="ml-4 lg:ml-0">
-              <h1 className="text-xl font-bold text-purple-700 dark:text-purple-300">
-                Travely
-              </h1>
+              <Image
+                src="/travelyLogo.svg"
+                alt="LOGO"
+                width={120}
+                height={48}
+              />
             </Link>
           </div>
           <nav className="mx-6 flex items-center space-x-4 lg:space-x-6 hidden md:block">
@@ -59,13 +65,13 @@ const Header = () => {
           </nav>
           <div className="flex items-center">
             {/* <ProfileButton /> */}
-            <Link href="sign-in">
+            <Link href="sign-up" className="hidden md:block">
               <Button
-                className="flex items-center justify-between gap-2 mr-6"
+                className="flex items-center justify-between gap-2 mr-6 "
                 variant="default"
               >
                 <User />
-                <h1>Sign in</h1>
+                <h1>Sign up</h1>
               </Button>
             </Link>
             <Button
@@ -97,6 +103,15 @@ const Header = () => {
                         </Link>
                       </>
                     ))}
+                    <Link href="sign-up">
+                      <Button
+                        className="flex items-center justify-between gap-2 mr-6 "
+                        variant="default"
+                      >
+                        <User />
+                        <h1>Sign up</h1>
+                      </Button>
+                    </Link>
                   </nav>
                   <div className="flex items-center justify-center">
                     <Copyright />
