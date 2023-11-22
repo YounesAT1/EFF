@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import Link from "next/link";
-import { useTheme } from "next-themes";
+import toast, { Toaster } from "react-hot-toast";
 
 import { Button } from "@/components/ui/Button";
 import {
@@ -17,9 +17,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Eye, EyeOff, Moon, Plane, Sun } from "lucide-react";
-import Image from "next/image";
+import { ArrowRight, Eye, EyeOff, Plane } from "lucide-react";
 import { useState } from "react";
+import SignInUpHeader from "@/components/SignInUpHeader";
 
 const formSchema = z
   .object({
@@ -73,35 +73,37 @@ const SignUpPage = () => {
     },
   });
 
+  const [emptyFileds, setEmptyFirld] = useState(true);
+
   const onSubmit = (data: z.infer<typeof formSchema>) => {
+    if (
+      data.firstName === "" ||
+      data.email === "" ||
+      data.lastName ||
+      data.password === "" ||
+      data.passwordComfirmation === ""
+    ) {
+      setEmptyFirld(true);
+    }
     console.log(data);
     form.reset();
+    setEmptyFirld(false);
   };
-
-  const { theme, setTheme } = useTheme();
 
   const [showPassword, setShowPassword] = useState(false);
   const handleTogglePassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
+  const handleToasts = () => {
+    emptyFileds
+      ? toast.error("Please enter all of your information ")
+      : toast.success("Sign up successfully");
+  };
+
   return (
     <Container>
-      <header className="flex items-center justify-between md:px-12 px-6 p-6">
-        <Link href="/" className="ml-4 lg:ml-0">
-          <Image src="/travelyLogo.svg" alt="LOGO" width={120} height={48} />
-        </Link>
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label="Toggle Theme"
-          className="mr-6"
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        >
-          <Sun className="h-6 w-6 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-6 w-6 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-        </Button>
-      </header>
+      <SignInUpHeader />
       <div className="flex justify-center items-center gap-3 mb-4">
         <h1 className="text-2xl text-center text-gray-600 font-bold dark:text-gray-200 ">
           Sign Up
@@ -119,7 +121,7 @@ const SignUpPage = () => {
           className="font-bold text-purple-500 ml-2 flex gap-1"
         >
           Sign in
-          <ArrowRight />
+          <ArrowRight className="arrow-icon" />
         </Link>
       </p>
       <div className="flex items-center  justify-center  ">
@@ -267,9 +269,10 @@ const SignUpPage = () => {
                 />
               )}
             </div>
-            <Button type="submit" className="w-full">
+            <Button type="submit" onClick={handleToasts} className="w-full">
               Sign up
             </Button>
+            <Toaster />
           </form>
         </Form>
       </div>

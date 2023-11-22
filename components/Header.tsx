@@ -48,6 +48,7 @@ const Header = () => {
                 alt="LOGO"
                 width={120}
                 height={48}
+                priority
               />
             </Link>
           </div>
@@ -90,7 +91,7 @@ const Header = () => {
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                 <div className="flex flex-col justify-between h-full">
-                  <nav className="flex flex-col gap-4">
+                  <nav className="flex flex-col gap-4 mt-16">
                     {routes.map((route, index) => (
                       <>
                         <Link

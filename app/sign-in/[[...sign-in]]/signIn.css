@@ -19,3 +19,20 @@ form {
     width: 445px;
   }
 }
+.font-bold.text-purple-500 {
+  color: #6b46c1;
+  text-decoration: none;
+}
+
+.font-bold.text-purple-500 .arrow-icon {
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.font-bold.text-purple-500:hover .arrow-icon {
+  transform: translateX(5px);
+}
+
+.font-bold.text-purple-500:not(:hover) .arrow-icon {
+  transform: translateX(0);
+}
