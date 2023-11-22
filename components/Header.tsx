@@ -113,7 +113,7 @@ const Header = () => {
                       </Button>
                     </Link>
                   </nav>
-                  <div className="flex items-center justify-center">
+                  <div className="flex items-center justify-center border-t pt-3 ">
                     <Copyright />
                   </div>
                 </div>

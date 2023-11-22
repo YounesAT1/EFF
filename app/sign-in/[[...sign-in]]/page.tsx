@@ -1,4 +1,5 @@
 "use client";
+import "./signIn.css";
 import Container from "@/components/ui/Container";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -16,7 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Eye, EyeOff, Moon, Plane, Sun } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, Moon, Plane, Sun } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -80,7 +81,7 @@ const SignInPage = () => {
           <Moon className="absolute h-6 w-6 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
         </Button>
       </header>
-      <div className="flex justify-center items-center gap-3 mb-8 ">
+      <div className="flex justify-center items-center gap-3 mb-4 ">
         <h1 className="text-2xl text-center text-gray-600 font-bold dark:text-gray-200 ">
           Sign In
         </h1>
@@ -90,11 +91,22 @@ const SignInPage = () => {
           className="text-gray-600  dark:text-gray-200"
         />
       </div>
+      <p className="font-semibold text-gray-700 text-center dark:text-white flex justify-center mb-6">
+        Do not have an accout ?{" "}
+        <Link
+          href="sign-up"
+          className="font-bold text-purple-500 flex gap-1 ml-2"
+        >
+          {" "}
+          Sign up
+          <ArrowRight />
+        </Link>
+      </p>
       <div className="flex items-center  justify-center">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8 w-[450px]"
+            className="space-y-8"
             method="POST"
             autoComplete="off"
           >
@@ -157,12 +169,6 @@ const SignInPage = () => {
             <Button type="submit" className="w-full">
               Sign in
             </Button>
-            <p className="font-semibold text-gray-700 text-center dark:text-white">
-              Do not have an accout ?{" "}
-              <Link href="sign-up" className="font-bold text-purple-700">
-                Sign up
-              </Link>
-            </p>
           </form>
         </Form>
       </div>

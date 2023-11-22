@@ -1,4 +1,5 @@
 "use client";
+import "./signUp.css";
 import Container from "@/components/ui/Container";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -16,7 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Eye, EyeOff, Moon, Plane, Sun } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, Moon, Plane, Sun } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -101,7 +102,7 @@ const SignUpPage = () => {
           <Moon className="absolute h-6 w-6 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
         </Button>
       </header>
-      <div className="flex justify-center items-center gap-3 mb-8">
+      <div className="flex justify-center items-center gap-3 mb-4">
         <h1 className="text-2xl text-center text-gray-600 font-bold dark:text-gray-200 ">
           Sign Up
         </h1>
@@ -111,11 +112,21 @@ const SignUpPage = () => {
           className="text-gray-600  dark:text-gray-200"
         />
       </div>
-      <div className="flex items-center  justify-center md:h-full w-50">
+      <p className="font-semibold text-gray-700 text-center dark:text-white flex justify-center mb-6">
+        Already a member ?{" "}
+        <Link
+          href="sign-in"
+          className="font-bold text-purple-500 ml-2 flex gap-1"
+        >
+          Sign in
+          <ArrowRight />
+        </Link>
+      </p>
+      <div className="flex items-center  justify-center  ">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8"
+            className="space-y-8 "
             method="POST"
             autoComplete="off"
           >
@@ -259,12 +270,6 @@ const SignUpPage = () => {
             <Button type="submit" className="w-full">
               Sign up
             </Button>
-            <p className="font-semibold text-gray-700 text-center dark:text-white">
-              Already a member ?{" "}
-              <Link href="sign-in" className="font-bold text-purple-700">
-                Sign in
-              </Link>
-            </p>
           </form>
         </Form>
       </div>
