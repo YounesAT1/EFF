@@ -1,12 +1,12 @@
 "use client";
 import "./signUp.css";
-import Container from "@/components/ui/Container";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import Link from "next/link";
-import toast, { Toaster } from "react-hot-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
 
+import Container from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import {
   Form,
@@ -17,9 +17,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Eye, EyeOff, Plane } from "lucide-react";
-import { useState } from "react";
+
 import SignInUpHeader from "@/components/SignInUpHeader";
+
+import toast, { Toaster } from "react-hot-toast";
+import { ArrowRight, Eye, EyeOff, Plane } from "lucide-react";
 
 const formSchema = z
   .object({
@@ -86,8 +88,8 @@ const SignUpPage = () => {
       setEmptyFirld(true);
     }
     console.log(data);
-    form.reset();
     setEmptyFirld(false);
+    form.reset();
   };
 
   const [showPassword, setShowPassword] = useState(false);
@@ -143,8 +145,8 @@ const SignUpPage = () => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="John"
                         {...field}
+                        placeholder="John"
                         id="firstName"
                         type="text"
                         name="firstName"

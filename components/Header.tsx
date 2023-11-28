@@ -40,7 +40,7 @@ const Header = () => {
   return (
     <header className="sm:flex sm:justify-between py-3 px-4 border-b">
       <Container>
-        <div className="relative px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
+        <div className="relative md:px-16 sm:px-6 lg:px-16 flex h-16 items-center justify-between">
           <div className="flex items-center">
             <Link href="/" className="ml-4 lg:ml-0">
               <Image
@@ -53,8 +53,8 @@ const Header = () => {
             </Link>
           </div>
           <nav className="mx-6 flex items-center space-x-4 lg:space-x-6 hidden md:block">
-            {routes.map((route, index) => (
-              <Button asChild variant="ghost" key={index}>
+            {routes.map((route) => (
+              <Button asChild variant="ghost" key={route.href}>
                 <Link
                   href={route.href}
                   className="text-sm font-medium transition-colors"
@@ -92,18 +92,16 @@ const Header = () => {
               <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                 <div className="flex flex-col justify-between h-full">
                   <nav className="flex flex-col gap-4 mt-16">
-                    {routes.map((route, index) => (
-                      <>
-                        <Link
-                          key={index}
-                          href={route.href}
-                          className="block px-4 py-2 text-lg 
-                          "
-                        >
-                          {route.label}
-                        </Link>
-                      </>
+                    {routes.map((route) => (
+                      <Link
+                        key={route.href}
+                        href={route.href}
+                        className="block px-4 py-2 text-lg"
+                      >
+                        {route.label}
+                      </Link>
                     ))}
+
                     <Link href="sign-up">
                       <Button
                         className="flex items-center justify-between gap-2 mr-6 "

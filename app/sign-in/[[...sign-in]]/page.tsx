@@ -1,12 +1,14 @@
 "use client";
 import "./signIn.css";
-import Container from "@/components/ui/Container";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useState } from "react";
 import * as z from "zod";
 import Link from "next/link";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
+import Container from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -15,10 +17,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import SignInUpHeader from "@/components/SignInUpHeader";
+
 import { ArrowRight, Eye, EyeOff, Plane } from "lucide-react";
-import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
 const formSchema = z.object({
@@ -59,8 +60,8 @@ const SignInPage = () => {
       setEmptyFirld(true);
     }
     console.log(data);
-    form.reset();
     setEmptyFirld(false);
+    form.reset();
   };
 
   const [showPassword, setShowPassword] = useState(false);
