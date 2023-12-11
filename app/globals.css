@@ -76,13 +76,8 @@
 }
 
 /* Hero Underlined Travely */
-.underlined:after {
-  content: "";
-  position: absolute;
-  height: 15px;
-  width: 216px;
-  left: 5px;
-  top: 51px;
-  border-top: 4px solid #a855f7;
-  border-radius: 50%;
+@media (max-width: 576px) {
+  .searchBtn {
+    width: 300px !important;
+  }
 }

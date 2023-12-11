@@ -38,9 +38,9 @@ const Header = () => {
   const { theme, setTheme } = useTheme();
 
   return (
-    <header className="sm:flex sm:justify-between py-3 px-4 border-b">
+    <header className="mx-auto max-w-7xl sm:flex sm:justify-between p-4  ">
       <Container>
-        <div className="relative md:px-16 sm:px-6 lg:px-16 flex h-16 items-center justify-between">
+        <div className="relative flex h-16 items-center justify-between">
           <div className="flex items-center">
             <Link href="/" className="ml-4 lg:ml-0">
               <Image
@@ -79,7 +79,6 @@ const Header = () => {
               variant="ghost"
               size="icon"
               aria-label="Toggle Theme"
-              className="mr-6"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             >
               <Sun className="h-6 w-6 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />

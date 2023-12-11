@@ -1,32 +1,35 @@
-import Container from "./ui/Container";
-import Image from "next/image";
+"use client";
+
+import FlightSearch from "./FlightSearch";
 
 const Hero = () => {
   return (
-    <Container>
-      <main className="py-3 px-4">
-        <div className="flex flex-col justify-between p-6 text-center">
-          <h1 className="text-4xl font-bold text-gray-600 dark:text-white">
-            Start making endless memories with <br />
-          </h1>
-          <h1 className="text-purple-500 text-5xl font-bold mt-6">
-            <span className="underlined relative">TRAVELY</span>
-          </h1>
-        </div>
+    <main>
+      <section className="max-w-7xl mx-auto p-6 ">
+        <h2 className="font-bold text-5xl text-slate-600 dark:text-slate-200">
+          Start making endless memories with{" "}
+          <span className="text-purple-600 dark:text-purple-500">Travely.</span>
+        </h2>
+        <h3 className="text-slate-500 py-5 text-xl dark:text-slate-100">
+          Millions of cheap flights and hotels. One simple search.
+        </h3>
+      </section>
+      <section className=" rounded-lg m-4 mt-0 -mb-14 lg:px-4">
+        <FlightSearch />
+      </section>
 
-        <div className="w-full md:px-16 sm:px-6 lg:px-16 aspect-w-16 h-96">
-          <div
-            className="w-full h-full rounded-lg  relative md:aspect-[2.4/1] overflow-hidden bg-cover "
-            style={{ backgroundImage: `url(/Rectangle1.jpg)` }}
-          >
-            <h1 className="ml-7 font-bold text-gray-100 text-xl mt-4 lg:text-2xl dark:text-gray-900">
-              Millions of cheap flights. One simple search.
-            </h1>
-            <div className="flex justify-center items-center gap-2"></div>
-          </div>
+      <section
+        className="mx-auto max-w-7xl mt-10 p-6 bg-gray-50 rounded-lg bg-cover overflow-hidden h-[376px]"
+        style={{ backgroundImage: `url(/Rectangle1.jpg)` }}
+      >
+        <div className="pt-8 ">
+          <h3 className="text-xl font-bold">Trending distinations</h3>
+          <p className="font-light">
+            Most popular choises for travellers from around the world
+          </p>
         </div>
-      </main>
-    </Container>
+      </section>
+    </main>
   );
 };
 

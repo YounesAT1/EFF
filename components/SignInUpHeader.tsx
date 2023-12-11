@@ -8,7 +8,7 @@ const SignInUpHeader = () => {
   const { theme, setTheme } = useTheme();
 
   return (
-    <header className="flex items-center justify-between px-12 p-6">
+    <header className="flex items-center justify-between px-5 p-6">
       <Link href="/" className="ml-4 lg:ml-0">
         <Image
           src="/travelyLogo.svg"
