@@ -71,7 +71,7 @@ const Header = () => {
                 className="flex items-center justify-between gap-2 mr-6 "
                 variant="default"
               >
-                <User />
+                <User size={22} />
                 <h1>Sign up</h1>
               </Button>
             </Link>

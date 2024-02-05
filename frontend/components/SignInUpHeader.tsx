@@ -8,8 +8,8 @@ const SignInUpHeader = () => {
   const { theme, setTheme } = useTheme();
 
   return (
-    <header className="flex items-center justify-between px-5 p-6">
-      <a href="/" className="ml-4 lg:ml-0">
+    <header className="flex items-center justify-between px-5 max-w-7xl mx-auto p-6">
+      <Link href="/" className="ml-4 lg:ml-0">
         <Image
           src="/travelyLogo.svg"
           alt="LOGO"
@@ -17,7 +17,7 @@ const SignInUpHeader = () => {
           height={48}
           priority
         />
-      </a>
+      </Link>
       <Button
         variant="ghost"
         size="icon"

@@ -39,27 +39,25 @@ const formSchema = z
       .min(8, {
         message: "Password must be at least 8 characters long.",
       })
-      .refine((value) => /[a-z]/.test(value), {
-        message: "Password must contain at least one lowercase letter.",
-      })
-      .refine((value) => /[A-Z]/.test(value), {
-        message: "Password must contain at least one uppercase letter.",
-      })
-      .refine((value) => /\d/.test(value), {
-        message: "Password must contain at least one number.",
-      })
-      .refine((value) => /[!@#$%^&*(),.?":{}|<>]/.test(value), {
-        message: "Password must contain at least one symbol.",
-      }),
-    passwordComfirmation: z.string(),
+      .refine(
+        (value) =>
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])/.test(
+            value
+          ),
+        {
+          message:
+            "Password must include at least one uppercase, one lowercase, one number and one symbol.",
+        }
+      ),
+    passwordConfirmation: z.string(),
   })
   .refine(
     (values) => {
-      return values.password === values.passwordComfirmation;
+      return values.password === values.passwordConfirmation;
     },
     {
       message: "Passwords must match!",
-      path: ["passwordComfirmation"],
+      path: ["passwordConfirmation"],
     }
   );
 
@@ -71,36 +69,29 @@ const SignUpPage = () => {
       lastName: "",
       email: "",
       password: "",
-      passwordComfirmation: "",
+      passwordConfirmation: "",
     },
   });
-
-  const [emptyFileds, setEmptyFirld] = useState(true);
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     if (
       data.firstName === "" ||
+      data.lastName === "" ||
       data.email === "" ||
-      data.lastName ||
       data.password === "" ||
-      data.passwordComfirmation === ""
+      data.passwordConfirmation === ""
     ) {
-      setEmptyFirld(true);
+      toast.error("All fields are required");
+      return;
     }
     console.log(data);
-    setEmptyFirld(false);
+    toast.success("Sign up successful");
     form.reset();
   };
 
   const [showPassword, setShowPassword] = useState(false);
   const handleTogglePassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
-  };
-
-  const handleToasts = () => {
-    emptyFileds
-      ? toast.error("Please enter all of your information ")
-      : toast.success("Sign up successfully");
   };
 
   return (
@@ -237,12 +228,12 @@ const SignUpPage = () => {
             <div className="flex items-center justify-between relative">
               <FormField
                 control={form.control}
-                name="passwordComfirmation"
+                name="passwordConfirmation"
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel
                       className="text-l"
-                      htmlFor="passwordComfirmation"
+                      htmlFor="passwordConfirmation"
                     >
                       Confirm Password :
                     </FormLabel>
@@ -271,10 +262,9 @@ const SignUpPage = () => {
                 />
               )}
             </div>
-            <Button type="submit" onClick={handleToasts} className="w-full">
+            <Button type="submit" className="w-full">
               Sign up
             </Button>
-            <Toaster />
           </form>
         </Form>
       </div>

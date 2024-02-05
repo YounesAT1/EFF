@@ -20,7 +20,7 @@ import {
 import SignInUpHeader from "@/components/SignInUpHeader";
 
 import { ArrowRight, Eye, EyeOff, Plane } from "lucide-react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -31,18 +31,16 @@ const formSchema = z.object({
     .min(8, {
       message: "Password must be at least 8 characters long.",
     })
-    .refine((value) => /[a-z]/.test(value), {
-      message: "Password must contain at least one lowercase letter.",
-    })
-    .refine((value) => /[A-Z]/.test(value), {
-      message: "Password must contain at least one uppercase letter.",
-    })
-    .refine((value) => /\d/.test(value), {
-      message: "Password must contain at least one number.",
-    })
-    .refine((value) => /[!@#$%^&*(),.?":{}|<>]/.test(value), {
-      message: "Password must contain at least one symbol.",
-    }),
+    .refine(
+      (value) =>
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])/.test(
+          value
+        ),
+      {
+        message:
+          "Password must include at least one uppercase, one lowercase, one number and one symbol.",
+      }
+    ),
 });
 const SignInPage = () => {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -53,26 +51,19 @@ const SignInPage = () => {
     },
   });
 
-  const [emptyFileds, setEmptyFirld] = useState(true);
-
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     if (data.email === "" || data.password === "") {
-      setEmptyFirld(true);
+      toast.error("Please enter all of your information");
+      return;
     }
     console.log(data);
-    setEmptyFirld(false);
+    toast.success("Sign in successfully");
     form.reset();
   };
 
   const [showPassword, setShowPassword] = useState(false);
   const handleTogglePassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
-  };
-
-  const handleToasts = () => {
-    emptyFileds
-      ? toast.error("Please enter all of your information ")
-      : toast.success("Sign in successfully");
   };
 
   return (
@@ -163,10 +154,9 @@ const SignInPage = () => {
               )}
             </div>
 
-            <Button type="submit" onClick={handleToasts} className="w-full">
-              Sign up
+            <Button type="submit" className="w-full">
+              Sign in
             </Button>
-            <Toaster />
           </form>
         </Form>
       </div>

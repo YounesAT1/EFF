@@ -50,7 +50,7 @@ const FlightSearch = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="flex flex-col lg:flex-row lg:max-w-6xl lg:mx-auto items-center justify-center space-x-0 lg:space-x-2 space-y-4 lg:space-y-0 rounded-lg"
+        className="flex flex-col lg:flex-row lg:mx-auto items-center justify-center space-x-0 lg:space-x-2 space-y-4 lg:space-y-0 rounded-lg  sm:mx-0 sm:w-[1250px] w-[335px] mx-6"
       >
         <div className="grid w-full lg:max-w-sm gap-1.5">
           <FormField
@@ -159,7 +159,7 @@ const FlightSearch = () => {
           <Button
             type="submit"
             variant={"default"}
-            className="text-white dark:bg-white dark:text-slate-800 lg:mt-[34px] md:mt-0 sm:mt-0 lg:w-full md:w-[600px] sm:w-[300px] "
+            className="text-white dark:bg-white dark:text-slate-800 lg:mt-[34px] md:mt-0 sm:mt-0 w-[300px] sm:w-full"
           >
             Search
           </Button>
