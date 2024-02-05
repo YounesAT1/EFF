@@ -14,7 +14,7 @@ const Hero = () => {
           Millions of cheap flights and hotels. One simple search.
         </h3>
       </section>
-      <section className=" rounded-lg m-4 mt-0 -mb-14 lg:px-4">
+      <section className=" rounded-lg  mt-0 -mb-14 lg:px-4">
         <FlightSearch />
       </section>
 

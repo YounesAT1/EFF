@@ -9,7 +9,7 @@ const SignInUpHeader = () => {
 
   return (
     <header className="flex items-center justify-between px-5 p-6">
-      <Link href="/" className="ml-4 lg:ml-0">
+      <a href="/" className="ml-4 lg:ml-0">
         <Image
           src="/travelyLogo.svg"
           alt="LOGO"
@@ -17,7 +17,7 @@ const SignInUpHeader = () => {
           height={48}
           priority
         />
-      </Link>
+      </a>
       <Button
         variant="ghost"
         size="icon"
