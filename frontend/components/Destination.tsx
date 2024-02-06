@@ -1,4 +1,3 @@
-import { destinations } from "@/lib/destinations";
 import {
   Card,
   CardContent,

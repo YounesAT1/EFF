@@ -1,10 +1,12 @@
-"use client";
+import AsyncSelect from "react-select/async";
+import { AxiosResponse } from "axios";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { cn } from "../lib/utils";
-
+import axios from "axios";
 import { Button } from "./ui/Button";
+
 import {
   Form,
   FormControl,
@@ -13,16 +15,16 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import { Input } from "./ui/input";
-import { CalendarDays, PlaneLanding, PlaneTakeoff } from "lucide-react";
-import React from "react";
+import { CalendarDays, MapPin, PlaneLanding, PlaneTakeoff } from "lucide-react";
+import React, { useState } from "react";
 import { format } from "date-fns";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Calendar } from "./ui/calendar";
+import { cn } from "@/lib/utils";
 
 export const formSchema = z.object({
-  departure: z.string(),
-  arrival: z.string(),
+  departure: z.object({ value: z.string() }).or(z.string()),
+  arrival: z.object({ value: z.string() }).or(z.string()),
   dates: z.object({
     from: z.date(),
     to: z.date(),
@@ -43,7 +45,73 @@ const FlightSearch = () => {
   });
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    const departure =
+      typeof values.departure === "object"
+        ? (values.departure as { value: string }).value
+        : values.departure;
+    const arrival =
+      typeof values.arrival === "object"
+        ? (values.arrival as { value: string }).value
+        : values.arrival;
+
+    console.log({ departure, arrival, dates: values.dates });
+
+    form.reset();
+  };
+
+  const [airportOptions, setAirportOptions] = useState([]);
+
+  const loadOptions = async (inputValue: string) => {
+    const url = "https://test.api.amadeus.com/v1/reference-data/locations";
+    const params = {
+      subType: "AIRPORT",
+      keyword: inputValue,
+      "page[limit]": 10,
+      "page[offset]": 0,
+      sort: "analytics.travelers.score",
+      view: "FULL",
+    };
+
+    try {
+      const response: AxiosResponse = await axios.get(url, {
+        params,
+        headers: {
+          Accept: "application/vnd.amadeus+json",
+          Authorization: "Bearer 9p8DT1Fb5eYGW53basLNcndyrvz6",
+        },
+      });
+
+      const filteredAirports = response.data.data.filter(
+        (airport: {
+          address: { cityName: string; countryName: string };
+          name: string;
+        }) =>
+          airport.address.cityName
+            .toLowerCase()
+            .includes(inputValue.toLowerCase()) ||
+          airport.address.countryName
+            .toLowerCase()
+            .includes(inputValue.toLowerCase()) ||
+          airport.name.toLowerCase().includes(inputValue.toLowerCase())
+      );
+
+      const airportData = filteredAirports.map(
+        (airport: {
+          iataCode: string;
+          name: string;
+          address: { countryName: string };
+        }) => ({
+          value: airport.iataCode,
+          label: `${airport.name}(${airport.iataCode})-${airport.address.countryName}`,
+        })
+      );
+
+      setAirportOptions(airportData);
+      return airportData;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return [];
+    }
   };
 
   return (
@@ -63,10 +131,14 @@ const FlightSearch = () => {
                   <p className="text-xl">From</p>
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="New York JFK"
+                  <AsyncSelect
                     {...field}
-                    className="bg-white dark:text-slate-800 "
+                    placeholder="New york"
+                    className="bg-gray-100 dark:text-slate-800 rounded-lg text-l text-slate-800"
+                    loadOptions={(inputValue) => loadOptions(inputValue)}
+                    options={airportOptions}
+                    isSearchable
+                    cacheOptions
                   />
                 </FormControl>
                 <FormMessage />
@@ -86,10 +158,13 @@ const FlightSearch = () => {
                   <p className="text-xl">To</p>
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Tokyo HND"
+                  <AsyncSelect
                     {...field}
-                    className="bg-white dark:text-slate-800"
+                    placeholder="Paris"
+                    className="bg-gray-200 dark:text-slate-800 rounded-lg border-muted focus:outline-none outline-none text-l text-slate-800"
+                    loadOptions={(inputValue) => loadOptions(inputValue)}
+                    isSearchable
+                    cacheOptions
                   />
                 </FormControl>
                 <FormMessage />
@@ -98,7 +173,7 @@ const FlightSearch = () => {
           />
         </div>
 
-        <div className="grid w-full lg:max-x-sm  gap-1.5  items-center">
+        <div className="grid w-full lg:max-x-sm  gap-1.5  items-center ">
           <FormField
             control={form.control}
             name="dates"
@@ -115,7 +190,7 @@ const FlightSearch = () => {
                         id="date"
                         variant={"outline"}
                         className={cn(
-                          "w-full lg:[300px] justify-start text-left font-normal",
+                          "w-full  justify-start text-left font-normal",
                           !field.value.from && "text-muted-foreground"
                         )}
                       >
