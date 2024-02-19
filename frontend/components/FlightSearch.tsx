@@ -77,7 +77,7 @@ const FlightSearch = () => {
         params,
         headers: {
           Accept: "application/vnd.amadeus+json",
-          Authorization: "Bearer 9p8DT1Fb5eYGW53basLNcndyrvz6",
+          Authorization: "Bearer 6BIfNyYdAjGRhwmb3SAWm5AuDSNt",
         },
       });
 
