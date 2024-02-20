@@ -6,7 +6,7 @@ const Copyright = () => {
   return (
     <>
       <p className="text-center">
-        &copy; {currentYear} Travely. All rights reserved.
+        &copy; {currentYear} Travely. <br /> All rights reserved.
       </p>
     </>
   );

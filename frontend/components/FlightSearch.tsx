@@ -219,8 +219,8 @@ const FlightSearch = () => {
                       onClick={() =>
                         form.setValue("numberOfPassengers", field.value - 1)
                       }
-                      disabled={field.value <= 1}
-                      className="h-[38px]"
+                      disabled={field.value === 0}
+                      className="h-[38px] "
                     >
                       <span className="font-semibold"> - </span>
                     </Button>
