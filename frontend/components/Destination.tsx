@@ -44,32 +44,34 @@ export default function Destination({ destination }: DestinationProps) {
           </div>
           <CardDescription>
             {destination.description} <br />
-            <span className="text-slate-700 underline text-xl dark:text-gray-200 mt-4">
+            <span className="text-slate-700 underline text-xl dark:text-gray-200">
               Average visitors per year : {destination?.numberOfVisitersByYear}
             </span>
-            <div className="relative w-full h-[350px] mt-4">
-              <Image
-                src={destination.imageUrl}
-                alt={destination.name}
-                layout="fill"
-                objectFit="cover"
-                className="rounded-sm"
-              />
-            </div>
           </CardDescription>
+          <div className="relative w-full h-[350px]">
+            <Image
+              src={destination.imageUrl}
+              alt={destination.name}
+              layout="fill"
+              objectFit="cover"
+              className="rounded-sm mt-[16px]"
+            />
+          </div>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-800 font-semibold dark:text-gray-200 mt-4">
-            What can you do?
-          </p>
-          <ul className="ml-4">
-            {destination.whatCanYouDo.map((dest, index) => (
-              <div key={index} className="flex items-center gap-x-2">
-                <Dot className="text-sm text-muted-foreground" />
-                <li className="text-sm text-muted-foreground">{dest}</li>
-              </div>
-            ))}
-          </ul>
+          <div>
+            <p className="text-gray-800 font-semibold dark:text-gray-200 mt-4">
+              What can you do?
+            </p>
+            <ul className="ml-4">
+              {destination.whatCanYouDo.map((dest, index) => (
+                <div key={index} className="flex items-center gap-x-2">
+                  <Dot className="text-sm text-muted-foreground" />
+                  <li className="text-sm text-muted-foreground">{dest}</li>
+                </div>
+              ))}
+            </ul>
+          </div>
         </CardContent>
         <CardFooter className="flex items-center justify-between mt-4">
           <p className="text-gray-800 font-semibold dark:text-gray-200">

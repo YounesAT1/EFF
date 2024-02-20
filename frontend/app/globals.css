@@ -75,9 +75,23 @@
   }
 }
 
-/* Hero Underlined Travely */
 @media (max-width: 576px) {
   .searchBtn {
     width: 300px !important;
   }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: violet;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: violet;
+}
+
+html {
+  scroll-behavior: smooth;
 }

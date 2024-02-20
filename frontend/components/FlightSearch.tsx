@@ -1,3 +1,4 @@
+"use client";
 import { format } from "date-fns";
 import AsyncSelect from "react-select/async";
 import { useForm } from "react-hook-form";
