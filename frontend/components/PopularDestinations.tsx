@@ -56,7 +56,7 @@ export default function PopularDestinations() {
       <h1 className="text-3xl font-semibold text-gray-700 dark:text-gray-50">
         Popular Destinations
       </h1>
-      <div className="flex items-center sm:justify-start  justify-center mb-4">
+      <div className="flex items-center sm:justify-start  justify-center mb-4 mt-12">
         <div className="flex flex-col sm:flex-row gap-y-2 sm:gap-x-3 mr-3">
           {renderButton("summer", "Summer")}
           {renderButton("spring", "Spring")}

@@ -4,6 +4,7 @@ import FlightSearch from "./FlightSearch";
 import PopularDestinations from "./PopularDestinations";
 import Slider from "./Slider";
 import AboutUs from "./AboutUs";
+import Services from "./Services";
 
 const Hero = () => {
   return (
@@ -23,6 +24,9 @@ const Hero = () => {
       </section>
       <section className="max-w-7xl mx-auto p-6 mt-12">
         <PopularDestinations />
+      </section>
+      <section className="max-w-7xl mx-auto p-6 ">
+        <Services />
       </section>
       <section className="max-w-7xl mx-auto p-6 ">
         <AboutUs />
