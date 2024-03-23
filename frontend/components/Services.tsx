@@ -6,18 +6,17 @@ export default function Services() {
       </h1>
       <div className="grid grid-cols-12 gap-4 mt-12">
         <div
-          className="col-span-12 md:col-span-4 lg:col-span-3 xl:col-span-3 row-span-6 bg-cover bg-center relative rounded-lg  p-4"
+          className="col-span-12 md:col-span-4 lg:col-span-3 xl:col-span-3 row-span-3 md:row-span-6 bg-cover bg-center relative rounded-lg  p-4 sm:h-[415px] h-[200px]"
           style={{
             backgroundImage:
               'url("https://images.unsplash.com/photo-1517999349371-c43520457b23?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")',
-            height: "415px",
           }}
         >
           <div className="absolute inset-0 bg-black bg-opacity-50 rounded-lg"></div>
 
-          <div className="flex h-full justify-between flex-col relative z-10">
+          <div className="flex h-full justify-between flex-col relative z-1">
             <h1 className="text-white text-xl font-medium">Flight Booking</h1>
-            <p className="text-sm text-white">
+            <p className="text-sm text-white hidden md:block">
               Book flights to destinations worldwide hassle-free with our
               user-friendly flight booking service. We offer competitive prices
               and a wide selection of airlines to suit your travel needs.
@@ -36,11 +35,11 @@ export default function Services() {
           {/* Dark overlay */}
           <div className="absolute inset-0 bg-black bg-opacity-50 rounded-lg"></div>
 
-          <div className="flex h-full justify-between flex-col relative z-10">
+          <div className="flex h-full justify-between flex-col relative z-1">
             <h1 className="text-white text-xl font-medium">
               Hotel Reservation
             </h1>
-            <p className="text-sm text-white">
+            <p className="text-sm text-white hidden md:block">
               Find the perfect accommodation for your trip with our hotel
               reservation service. Browse through a diverse range of hotels,
               from budget-friendly to luxurious options, and secure your stay
@@ -58,9 +57,9 @@ export default function Services() {
         >
           <div className="absolute inset-0 bg-black bg-opacity-50 rounded-lg"></div>
 
-          <div className="flex h-full justify-between flex-col relative z-10">
+          <div className="flex h-full justify-between flex-col relative z-1">
             <h1 className="text-white text-xl font-medium">Taxi Transfer</h1>
-            <p className="text-sm text-white">
+            <p className="text-sm text-white hidden md:block">
               Enjoy smooth, comfortable rides with our reliable taxi transfer
               service. Whether it is to or from the airport, hotel, or anywhere
               else.
@@ -77,11 +76,11 @@ export default function Services() {
         >
           <div className="absolute inset-0 bg-black bg-opacity-50 rounded-lg"></div>
 
-          <div className="flex h-full justify-between flex-col relative z-10">
+          <div className="flex h-full justify-between flex-col relative z-1">
             <h1 className="text-white text-xl font-medium">
               Airport Lounge Access
             </h1>
-            <p className="text-sm text-white">
+            <p className="text-sm text-white hidden md:block">
               Elevate your travel experience with exclusive access to premium
               airport lounges worldwide. Escape the crowds and unwind in comfort
               while enjoying complimentary refreshments, Wi-Fi, and other

@@ -1,8 +1,7 @@
 import React from "react";
 
+export const currentYear = new Date().getFullYear();
 const Copyright = () => {
-  const currentYear = new Date().getFullYear();
-
   return (
     <>
       <p className="text-center">

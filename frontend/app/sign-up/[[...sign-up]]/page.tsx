@@ -97,7 +97,7 @@ const SignUpPage = () => {
   return (
     <Container>
       <SignInUpHeader />
-      <div className="flex justify-center items-center gap-3 mb-4">
+      <div className="flex justify-center items-center gap-3 ">
         <h1 className="text-2xl text-center text-gray-600 font-bold dark:text-gray-200 ">
           Sign Up
         </h1>

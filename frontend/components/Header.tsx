@@ -15,7 +15,7 @@ import { ProfileButton } from "./ui/ProfileButton";
 
 const routes = [
   {
-    href: "/flights",
+    href: "/",
     label: "Flights",
   },
   {
@@ -26,7 +26,6 @@ const routes = [
     href: "/taxis",
     label: "Taxis",
   },
-
   {
     href: "/services",
     label: "Services",
@@ -69,11 +68,11 @@ const Header = () => {
           </nav>
 
           <div className="flex items-center ">
-            <div className="hidden md:block mx-3">
+            {/* <div className="hidden md:block mx-3">
               <ProfileButton />
-            </div>
+            </div> */}
 
-            {/* <Link href="sign-up" className="hidden md:block">
+            <Link href="sign-up" className="hidden md:block ">
               <Button
                 className="flex items-center justify-between gap-2 mr-6 "
                 variant="default"
@@ -81,7 +80,7 @@ const Header = () => {
                 <User size={22} />
                 <h1>Sign up</h1>
               </Button>
-            </Link> */}
+            </Link>
 
             <Button
               variant="ghost"

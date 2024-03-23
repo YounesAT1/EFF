@@ -89,7 +89,7 @@ const FlightSearch = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="flex flex-col lg:flex-row lg:mx-auto items-center justify-center space-x-0 lg:space-x-2 space-y-4 lg:space-y-0 rounded-lg  sm:mx-0 sm:w-[1250px] w-[335px] "
+        className="flex flex-col lg:flex-row lg:mx-auto items-center justify-center space-x-0 lg:space-x-2 space-y-4 lg:space-y-0 rounded-lg  sm:mx-0 sm:w-[1250px] w-[300px] "
       >
         <div className="grid w-full lg:max-w-sm gap-1.5">
           <FormField
