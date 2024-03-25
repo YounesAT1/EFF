@@ -3,11 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "react-hot-toast";
-import Header from "@/components/Header";
-import { Footer } from "@/components/Footer";
 const inter = Inter({ subsets: ["latin"] });
-import { Provider } from "react-redux";
-import store from "@/redux/store";
+import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata: Metadata = {
   title: "Travely",
@@ -28,12 +25,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Toaster />
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {/* <Header /> */}
-          {children}
-          {/* <Footer /> */}
-        </ThemeProvider>
+        <AuthProvider>
+          {" "}
+          <Toaster />
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            {children}
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

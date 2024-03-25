@@ -21,9 +21,8 @@ import {
 import SignInUpHeader from "@/components/SignInUpHeader";
 
 import { ArrowRight, Eye, EyeOff, Plane } from "lucide-react";
-import toast from "react-hot-toast";
-import { axiosClient } from "@/api/axios";
-import { useRouter } from "next/navigation";
+import useAuthContext from "@/context/AuthContext";
+import Loader from "@/components/ui/Loader";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -47,8 +46,7 @@ const formSchema = z.object({
 });
 
 const SignInPage = () => {
-  const router = useRouter();
-  const [error, setError] = useState<string>();
+  const { error, login, isLoading } = useAuthContext();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -59,24 +57,8 @@ const SignInPage = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    try {
-      const csrf = await axiosClient.get("/sanctum/csrf-cookie");
-      const res = await axiosClient.post("/login", data);
-      console.log(res);
-
-      if (res.status === 204) {
-        router.push("/");
-        toast.success("Sign in successfully");
-      }
-    } catch (error: any) {
-      if (error.response.status === 422) {
-        setError(error.response.data.errors.email);
-      } else {
-        setError("Something went wrong!");
-      }
-    } finally {
-      form.reset();
-    }
+    login(data);
+    form.reset();
   };
 
   const [showPassword, setShowPassword] = useState(false);
@@ -177,8 +159,13 @@ const SignInPage = () => {
               )}
             </div>
 
-            <Button type="submit" className="w-full">
-              Sign in
+            <Button
+              type="submit"
+              className={`w-full flex items-center justify-center ${
+                isLoading ? "opacity-70  cursor-not-allowed" : ""
+              }`}
+            >
+              {isLoading ? <Loader /> : "Sign in"}
             </Button>
           </form>
         </Form>

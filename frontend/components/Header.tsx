@@ -1,7 +1,6 @@
-"use client";
-
 import Link from "next/link";
 import { useTheme } from "next-themes";
+import { useContext } from "react";
 
 import Container from "./ui/Container";
 import { Button } from "./ui/Button";
@@ -12,6 +11,7 @@ import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import Image from "next/image";
 import { useState } from "react";
 import { ProfileButton } from "./ui/ProfileButton";
+import useAuthContext from "@/context/AuthContext";
 
 const routes = [
   {
@@ -38,6 +38,7 @@ const routes = [
 
 const Header = () => {
   const { theme, setTheme } = useTheme();
+  const { user } = useAuthContext();
 
   return (
     <header className="mx-auto max-w-7xl sm:flex sm:justify-between p-4 sticky top-0 bg-white bg-opacity-80 backdrop-blur-md z-10 rounded-b-md dark:bg-gray-800 dark:bg-opacity-80">
@@ -68,19 +69,21 @@ const Header = () => {
           </nav>
 
           <div className="flex items-center ">
-            {/* <div className="hidden md:block mx-3">
-              <ProfileButton />
-            </div> */}
-
-            <Link href="sign-up" className="hidden md:block ">
-              <Button
-                className="flex items-center justify-between gap-2 mr-6 "
-                variant="default"
-              >
-                <User size={22} />
-                <h1>Sign up</h1>
-              </Button>
-            </Link>
+            {!user ? ( // Render sign-in button if user is not authenticated
+              <Link href="sign-up" className="hidden md:block ">
+                <Button
+                  className="flex items-center justify-between gap-2 mr-6 "
+                  variant="default"
+                >
+                  <User size={22} />
+                  <h1>Sign up</h1>
+                </Button>
+              </Link>
+            ) : (
+              <div className="hidden md:block mx-3">
+                <ProfileButton user={user} />
+              </div>
+            )}
 
             <Button
               variant="ghost"
@@ -99,9 +102,11 @@ const Header = () => {
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px]">
                 <div className="flex flex-col justify-between mt-[40px] gap-y-5">
-                  <div className="flex items-center justify-end">
-                    <ProfileButton />
-                  </div>
+                  {user && (
+                    <div className="flex items-center justify-end">
+                      <ProfileButton user={user} />
+                    </div>
+                  )}
                   <nav className="flex flex-col gap-y-2">
                     {routes.map((route) => (
                       <Link
@@ -113,15 +118,17 @@ const Header = () => {
                       </Link>
                     ))}
                   </nav>
-                  <Link href="sign-up" className="w-full">
-                    <Button
-                      className="flex items-center justify-center  gap-2 w-full"
-                      variant="default"
-                    >
-                      <User />
-                      <h1>Sign up</h1>
-                    </Button>
-                  </Link>
+                  {!user && ( // Render sign-in button if user is not authenticated
+                    <Link href="sign-up" className="w-full">
+                      <Button
+                        className="flex items-center justify-center  gap-2 w-full"
+                        variant="default"
+                      >
+                        <User />
+                        <h1>Sign up</h1>
+                      </Button>
+                    </Link>
+                  )}
                 </div>
                 <div className="absolute bottom-4 w-full right-0 flex items-center justify-center border-t border-r-slate-300 pt-2">
                   <Copyright />
