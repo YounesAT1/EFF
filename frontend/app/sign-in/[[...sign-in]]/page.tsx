@@ -22,6 +22,8 @@ import SignInUpHeader from "@/components/SignInUpHeader";
 
 import { ArrowRight, Eye, EyeOff, Plane } from "lucide-react";
 import toast from "react-hot-toast";
+import { axiosClient } from "@/api/axios";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -45,22 +47,36 @@ const formSchema = z.object({
 });
 
 const SignInPage = () => {
+  const router = useRouter();
+  const [error, setError] = useState<string>();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: "You@gmail.com",
+      password: "123You@1",
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    if (data.email === "" || data.password === "") {
-      toast.error("Please enter all of your information");
-      return;
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    try {
+      const csrf = await axiosClient.get("/sanctum/csrf-cookie");
+      const res = await axiosClient.post("/login", data);
+      console.log(res);
+
+      if (res.status === 204) {
+        router.push("/");
+        toast.success("Sign in successfully");
+      }
+    } catch (error: any) {
+      if (error.response.status === 422) {
+        setError(error.response.data.errors.email);
+      } else {
+        setError("Something went wrong!");
+      }
+    } finally {
+      form.reset();
     }
-    console.log(data);
-    toast.success("Sign in successfully");
-    form.reset();
   };
 
   const [showPassword, setShowPassword] = useState(false);
@@ -118,6 +134,11 @@ const SignInPage = () => {
                     />
                   </FormControl>
                   <FormMessage className="dark:text-red-700" />
+                  {error && (
+                    <FormMessage className="dark:text-red-700">
+                      {error}
+                    </FormMessage>
+                  )}
                 </FormItem>
               )}
             />
