@@ -12,10 +12,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import { getInitials } from "@/lib/helpers";
+import useAuthContext from "@/context/AuthContext";
 
 interface UserProps {
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  password?: string;
 }
 
 interface ProfileButtonProps {
@@ -28,30 +31,34 @@ export function ProfileButton({ user }: ProfileButtonProps) {
     lastName: user?.lastName!,
   });
 
+  const { logout } = useAuthContext();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="cursor-pointer">
-          <AvatarFallback>{initials}</AvatarFallback>
+          <AvatarFallback className="font-medium">{initials}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>{user?.firstName}</DropdownMenuLabel>
+        <DropdownMenuLabel>
+          {user?.firstName} {user?.lastName}
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
             <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
+            <span className="cursor-pointer">Profile</span>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <LayoutDashboard className="mr-2 h-4 w-4" />
-            <span>Dashboard</span>
+            <span className="cursor-pointer">Dashboard</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={logout}>
           <LogOut className="mr-2 h-4 w-4" />
-          <span>Log out</span>
+          <button className="cursor-pointer">Log out</button>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

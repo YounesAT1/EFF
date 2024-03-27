@@ -1,12 +1,12 @@
 "use client";
 import "./signIn.css";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as z from "zod";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-
+import { useRouter } from "next/navigation";
 import Container from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/input";
@@ -23,7 +23,6 @@ import SignInUpHeader from "@/components/SignInUpHeader";
 import { ArrowRight, Eye, EyeOff, Plane } from "lucide-react";
 import useAuthContext from "@/context/AuthContext";
 import Loader from "@/components/ui/Loader";
-
 const formSchema = z.object({
   email: z.string().email({
     message: "Please enter a valid email.",
@@ -46,7 +45,9 @@ const formSchema = z.object({
 });
 
 const SignInPage = () => {
-  const { error, login, isLoading } = useAuthContext();
+  const router = useRouter();
+
+  const { isLoading, error, login, user } = useAuthContext();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -57,8 +58,9 @@ const SignInPage = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    login(data);
-    form.reset();
+    await login(data).then(() => {
+      form.reset();
+    });
   };
 
   const [showPassword, setShowPassword] = useState(false);

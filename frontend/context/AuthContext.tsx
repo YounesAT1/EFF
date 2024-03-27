@@ -1,78 +1,96 @@
 "use client";
-import React, { createContext, useContext, useState, ReactNode } from "react";
+
+import React, { createContext, useContext, useState } from "react";
 import { axiosClient } from "@/api/axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import Cookies from "js-cookie";
 
 type AuthProviderProps = {
   children: React.ReactNode;
 };
 
-type AuthContextType = {
-  login: (data: any) => Promise<void>;
-  getUser: () => Promise<void>;
-  error: string;
-  isLoading: boolean;
-  user: null;
+type User = {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  password?: string;
 };
 
-const AuthContext = createContext<AuthContextType>({
-  login: function (data: any): Promise<void> {
-    throw new Error("Function not implemented.");
-  },
-  getUser: function (): Promise<void> {
-    throw new Error("Function not implemented.");
-  },
-  error: "",
-  isLoading: false,
+type AuthContextProps = {
+  user: User | null;
+  isLoading: boolean;
+  error: string | null;
+  login: (data: any) => Promise<void>;
+  getUser: () => Promise<void>;
+  logout: () => void;
+};
+
+const AuthContext = createContext<AuthContextProps>({
   user: null,
+  isLoading: false,
+  error: null,
+  login: async () => {},
+  getUser: async () => {},
+  logout: () => {},
 });
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
-  const csrf = () => axiosClient.get("/sanctum/csrf-cookie");
+
+  const csrfToken = () => axiosClient.get("/sanctum/csrf-cookie");
 
   const getUser = async () => {
-    const { data } = await axiosClient.get("/api/user");
-    setUser(data);
+    try {
+      const { data } = await axiosClient.get("/api/user");
+      setUser(data);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
   };
 
-  const login = async ({ ...data }) => {
+  const login = async (data: any): Promise<void> => {
     setIsLoading(true);
     try {
-      await csrf();
+      await csrfToken();
       const res = await axiosClient.post("/login", data);
-      console.log(res);
 
       if (res.status === 204) {
-        getUser();
+        await getUser();
         router.push("/");
         toast.success("Sign in successfully");
+        Cookies.set("LOGGED_IN_TOKEN", "123456789");
       }
     } catch (error: any) {
-      if (error.response.status === 422) {
+      if (error.response && error.response.status === 422) {
         setError(error.response.data.errors.email);
       } else {
         setError("Something went wrong!");
       }
-      setIsLoading(false);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const value: AuthContextType = {
-    login,
-    getUser,
-    error,
-    isLoading,
-    user,
+  const logout = () => {
+    axiosClient.post("/logout").then(() => {
+      setUser(null);
+      toast.success("Logged out successfully");
+      Cookies.remove("LOGGED_IN_TOKEN");
+      router.push("/");
+    });
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{ getUser, login, user, error, isLoading, logout }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export default function useAuthContext() {

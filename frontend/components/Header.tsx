@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import { useContext } from "react";
+import { useEffect } from "react";
 
 import Container from "./ui/Container";
 import { Button } from "./ui/Button";
@@ -9,7 +9,6 @@ import Copyright from "./CopyRight";
 import { Sun, Moon, Menu, User } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import Image from "next/image";
-import { useState } from "react";
 import { ProfileButton } from "./ui/ProfileButton";
 import useAuthContext from "@/context/AuthContext";
 
@@ -38,7 +37,13 @@ const routes = [
 
 const Header = () => {
   const { theme, setTheme } = useTheme();
-  const { user } = useAuthContext();
+
+  const { user, getUser } = useAuthContext();
+  useEffect(() => {
+    if (!user) {
+      getUser();
+    }
+  }, [getUser, user]);
 
   return (
     <header className="mx-auto max-w-7xl sm:flex sm:justify-between p-4 sticky top-0 bg-white bg-opacity-80 backdrop-blur-md z-10 rounded-b-md dark:bg-gray-800 dark:bg-opacity-80">
@@ -69,8 +74,8 @@ const Header = () => {
           </nav>
 
           <div className="flex items-center ">
-            {!user ? ( // Render sign-in button if user is not authenticated
-              <Link href="sign-up" className="hidden md:block ">
+            {!user && (
+              <Link href="sign-up" className="hidden md:block">
                 <Button
                   className="flex items-center justify-between gap-2 mr-6 "
                   variant="default"
@@ -79,7 +84,8 @@ const Header = () => {
                   <h1>Sign up</h1>
                 </Button>
               </Link>
-            ) : (
+            )}
+            {user && (
               <div className="hidden md:block mx-3">
                 <ProfileButton user={user} />
               </div>
@@ -118,7 +124,7 @@ const Header = () => {
                       </Link>
                     ))}
                   </nav>
-                  {!user && ( // Render sign-in button if user is not authenticated
+                  {!user && (
                     <Link href="sign-up" className="w-full">
                       <Button
                         className="flex items-center justify-center  gap-2 w-full"

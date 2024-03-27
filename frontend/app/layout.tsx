@@ -26,7 +26,6 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
-          {" "}
           <Toaster />
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             {children}
