@@ -33,7 +33,7 @@ export default function PopularDestinations() {
     <Button
       size="lg"
       variant="secondary"
-      className="hover:bg-gray-200 mt-3"
+      className="hover:bg-gray-200 mt-3 dark:hover:bg-gray-50 dark:opacity-70 dark:hover:text-slate-500"
       onClick={() => setShowAllDestinations(true)}
     >
       <ArrowDownCircle />
@@ -44,7 +44,7 @@ export default function PopularDestinations() {
     <Button
       size="lg"
       variant="secondary"
-      className="hover:bg-gray-200 mt-3"
+      className="hover:bg-gray-200 mt-3 dark:hover:bg-gray-50 dark:opacity-70 dark:hover:text-slate-500"
       onClick={() => setShowAllDestinations(false)}
     >
       <ArrowUpCircle />

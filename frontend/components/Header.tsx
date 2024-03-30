@@ -1,6 +1,8 @@
+"use client";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 import Container from "./ui/Container";
 import { Button } from "./ui/Button";
@@ -25,17 +27,10 @@ const routes = [
     href: "/taxis",
     label: "Taxis",
   },
-  {
-    href: "#services",
-    label: "Services",
-  },
-  {
-    href: "#about",
-    label: "About",
-  },
 ];
 
 const Header = () => {
+  const pathName = usePathname();
   const { theme, setTheme } = useTheme();
 
   const { user, getUser } = useAuthContext();
@@ -65,7 +60,11 @@ const Header = () => {
               <Button asChild variant="ghost" key={route.href}>
                 <Link
                   href={route.href}
-                  className="text-sm font-medium transition-colors"
+                  className={`text-sm font-medium transition-colors ${
+                    route.href === pathName
+                      ? "text-violet-800 font-semibold underline decoration-wavy  underline-offset-2"
+                      : ""
+                  } `}
                 >
                   {route.label}
                 </Link>

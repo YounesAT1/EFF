@@ -55,6 +55,7 @@ export default function Destination({ destination }: DestinationProps) {
               layout="fill"
               objectFit="cover"
               className="rounded-sm mt-[16px]"
+              priority
             />
           </div>
         </CardHeader>

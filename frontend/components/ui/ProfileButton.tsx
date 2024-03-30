@@ -46,19 +46,19 @@ export function ProfileButton({ user }: ProfileButtonProps) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer">
             <User className="mr-2 h-4 w-4" />
-            <span className="cursor-pointer">Profile</span>
+            <span>Profile</span>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer">
             <LayoutDashboard className="mr-2 h-4 w-4" />
-            <span className="cursor-pointer">Dashboard</span>
+            <span>Dashboard</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={logout}>
+        <DropdownMenuItem onClick={logout} className="cursor-pointer">
           <LogOut className="mr-2 h-4 w-4" />
-          <button className="cursor-pointer">Log out</button>
+          <button>Log out</button>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

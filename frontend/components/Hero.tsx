@@ -18,17 +18,20 @@ const Hero = () => {
           Millions of cheap flights and hotels. One simple search.
         </h3>
       </section>
-      <section className=" flex items-center flex-col gap-y-4 justify-center w-full mt-0 -mb-14">
+      <section
+        className=" flex items-center flex-col gap-y-4 justify-center w-full mt-0 -mb-14"
+        id="flights"
+      >
         <FlightSearch />
         <Slider />
       </section>
       <section className="max-w-7xl mx-auto p-6 mt-12">
         <PopularDestinations />
       </section>
-      <section className="max-w-7xl mx-auto p-6 scroll-mt-20" id="services">
+      <section className="max-w-7xl mx-auto p-6 ">
         <Services />
       </section>
-      <section className="max-w-7xl mx-auto p-6  scroll-mt-20" id="about">
+      <section className="max-w-7xl mx-auto p-6 ">
         <AboutUs />
       </section>
     </main>
