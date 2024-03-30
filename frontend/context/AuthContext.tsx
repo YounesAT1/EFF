@@ -5,6 +5,7 @@ import { axiosClient } from "@/api/axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
+import { v4 as uuidv4 } from "uuid";
 
 type AuthProviderProps = {
   children: React.ReactNode;
@@ -21,16 +22,33 @@ type AuthContextProps = {
   user: User | null;
   isLoading: boolean;
   error: string | null;
-  login: (data: any) => Promise<void>;
+  emptyForm: boolean;
+  login: (data: loginPropsType) => Promise<void>;
+  register: (data: registerPropsType) => Promise<void>;
   getUser: () => Promise<void>;
   logout: () => void;
+};
+
+type loginPropsType = {
+  email: string;
+  password: string;
+};
+
+type registerPropsType = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
 };
 
 const AuthContext = createContext<AuthContextProps>({
   user: null,
   isLoading: false,
   error: null,
+  emptyForm: false,
   login: async () => {},
+  register: async () => {},
   getUser: async () => {},
   logout: () => {},
 });
@@ -39,7 +57,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const [emptyForm, setEmptyForm] = useState(false);
   const router = useRouter();
+  const randomToken = uuidv4();
 
   const csrfToken = () => axiosClient.get("/sanctum/csrf-cookie");
 
@@ -52,17 +72,43 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const login = async (data: any): Promise<void> => {
+  const login = async ({ ...data }: loginPropsType): Promise<void> => {
     setIsLoading(true);
     try {
       await csrfToken();
       const res = await axiosClient.post("/login", data);
 
       if (res.status === 204) {
+        setEmptyForm(true);
         await getUser();
         router.push("/");
         toast.success("Sign in successfully");
-        Cookies.set("LOGGED_IN_TOKEN", "123456789");
+        Cookies.set("AUTHENTICATED_TOKEN", randomToken);
+      }
+    } catch (error: any) {
+      if (error.response && error.response.status === 422) {
+        setError(error.response.data.errors.email);
+      } else {
+        setError("Something went wrong!");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const register = async ({ ...data }: registerPropsType) => {
+    setIsLoading(true);
+
+    try {
+      await csrfToken();
+      const res = await axiosClient.post("/register", data);
+
+      if (res.status === 204) {
+        setEmptyForm(true);
+        await getUser();
+        router.push("/");
+        toast.success("Sign up successfully");
+        Cookies.set("AUTHENTICATED_TOKEN", randomToken);
       }
     } catch (error: any) {
       if (error.response && error.response.status === 422) {
@@ -78,15 +124,26 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = () => {
     axiosClient.post("/logout").then(() => {
       setUser(null);
+      setError(null);
+      setEmptyForm(true);
       toast.success("Logged out successfully");
-      Cookies.remove("LOGGED_IN_TOKEN");
+      Cookies.remove("AUTHENTICATED_TOKEN");
       router.push("/");
     });
   };
 
   return (
     <AuthContext.Provider
-      value={{ getUser, login, user, error, isLoading, logout }}
+      value={{
+        getUser,
+        login,
+        register,
+        user,
+        error,
+        isLoading,
+        emptyForm,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

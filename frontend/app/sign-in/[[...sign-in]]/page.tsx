@@ -45,21 +45,21 @@ const formSchema = z.object({
 });
 
 const SignInPage = () => {
-  const router = useRouter();
-
-  const { isLoading, error, login, user } = useAuthContext();
+  const { isLoading, error, emptyForm, login } = useAuthContext();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "You@gmail.com",
-      password: "123You@1",
+      email: "",
+      password: "",
     },
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     await login(data).then(() => {
-      form.reset();
+      if (emptyForm && !error) {
+        form.reset();
+      }
     });
   };
 

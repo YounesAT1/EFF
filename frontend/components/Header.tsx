@@ -26,11 +26,11 @@ const routes = [
     label: "Taxis",
   },
   {
-    href: "/services",
+    href: "#services",
     label: "Services",
   },
   {
-    href: "/about",
+    href: "#about",
     label: "About",
   },
 ];

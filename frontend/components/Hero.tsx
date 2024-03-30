@@ -25,10 +25,10 @@ const Hero = () => {
       <section className="max-w-7xl mx-auto p-6 mt-12">
         <PopularDestinations />
       </section>
-      <section className="max-w-7xl mx-auto p-6 ">
+      <section className="max-w-7xl mx-auto p-6 scroll-mt-20" id="services">
         <Services />
       </section>
-      <section className="max-w-7xl mx-auto p-6 ">
+      <section className="max-w-7xl mx-auto p-6  scroll-mt-20" id="about">
         <AboutUs />
       </section>
     </main>

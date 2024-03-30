@@ -20,8 +20,9 @@ import { Input } from "@/components/ui/input";
 
 import SignInUpHeader from "@/components/SignInUpHeader";
 
-import toast, { Toaster } from "react-hot-toast";
 import { ArrowRight, Eye, EyeOff, Plane } from "lucide-react";
+import useAuthContext from "@/context/AuthContext";
+import Loader from "@/components/ui/Loader";
 
 const formSchema = z
   .object({
@@ -49,19 +50,21 @@ const formSchema = z
             "Password must include at least one uppercase, one lowercase, one number and one symbol.",
         }
       ),
-    passwordConfirmation: z.string(),
+    password_confirmation: z.string(),
   })
   .refine(
     (values) => {
-      return values.password === values.passwordConfirmation;
+      return values.password === values.password_confirmation;
     },
     {
       message: "Passwords must match!",
-      path: ["passwordConfirmation"],
+      path: ["password_confirmation"],
     }
   );
 
 const SignUpPage = () => {
+  const { isLoading, register, emptyForm, error } = useAuthContext();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -69,24 +72,16 @@ const SignUpPage = () => {
       lastName: "",
       email: "",
       password: "",
-      passwordConfirmation: "",
+      password_confirmation: "",
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    if (
-      data.firstName === "" ||
-      data.lastName === "" ||
-      data.email === "" ||
-      data.password === "" ||
-      data.passwordConfirmation === ""
-    ) {
-      toast.error("All fields are required");
-      return;
-    }
-    console.log(data);
-    toast.success("Sign up successful");
-    form.reset();
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    await register(data).then(() => {
+      if (emptyForm && !error) {
+        form.reset();
+      }
+    });
   };
 
   const [showPassword, setShowPassword] = useState(false);
@@ -188,6 +183,11 @@ const SignUpPage = () => {
                     />
                   </FormControl>
                   <FormMessage className="dark:text-red-700" />
+                  {error && (
+                    <FormMessage className="dark:text-red-700">
+                      {error}
+                    </FormMessage>
+                  )}
                 </FormItem>
               )}
             />
@@ -228,12 +228,12 @@ const SignUpPage = () => {
             <div className="flex items-center justify-between relative">
               <FormField
                 control={form.control}
-                name="passwordConfirmation"
+                name="password_confirmation"
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel
                       className="text-l"
-                      htmlFor="passwordConfirmation"
+                      htmlFor="password_confirmation"
                     >
                       Confirm Password :
                     </FormLabel>
@@ -262,8 +262,13 @@ const SignUpPage = () => {
                 />
               )}
             </div>
-            <Button type="submit" className="w-full">
-              Sign up
+            <Button
+              type="submit"
+              className={`w-full flex items-center justify-center ${
+                isLoading ? "opacity-70  cursor-not-allowed" : ""
+              }`}
+            >
+              {isLoading ? <Loader /> : "Sign up"}
             </Button>
           </form>
         </Form>
