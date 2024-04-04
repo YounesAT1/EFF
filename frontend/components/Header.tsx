@@ -62,7 +62,7 @@ const Header = () => {
                   href={route.href}
                   className={`text-sm font-medium transition-colors ${
                     route.href === pathName
-                      ? "text-violet-800 font-semibold underline decoration-wavy  underline-offset-2"
+                      ? "text-purple-800 font-semibold  underline-offset-2"
                       : ""
                   } `}
                 >

@@ -1,6 +1,7 @@
 "use client";
 import { Footer } from "@/components/Footer";
 import Header from "@/components/Header";
+import HotelSearch from "./HotelSearch";
 
 const HotelsPage = () => {
   return (
@@ -17,6 +18,7 @@ const HotelsPage = () => {
           Discover thousands of hotels worldwide. Book your ideal accommodation
           hassle-free.
         </h3>
+        <HotelSearch />
       </section>
       {/* <Footer /> */}
     </>

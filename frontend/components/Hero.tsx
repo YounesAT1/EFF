@@ -18,10 +18,7 @@ const Hero = () => {
           Millions of cheap flights and hotels. One simple search.
         </h3>
       </section>
-      <section
-        className=" flex items-center flex-col gap-y-4 justify-center w-full mt-0 -mb-14"
-        id="flights"
-      >
+      <section className=" flex items-center flex-col gap-y-4 justify-center w-full mt-0 -mb-14">
         <FlightSearch />
         <Slider />
       </section>
