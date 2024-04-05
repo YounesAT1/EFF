@@ -10,7 +10,8 @@ import {
   FormMessage,
   Form,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import AsyncSelect from "react-select/async";
+
 import {
   Popover,
   PopoverContent,
@@ -30,11 +31,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { customStyles } from "@/lib/selectStyles";
+import useGetCities from "@/hooks/getCities";
 
 const formSchema = z.object({
-  cityName: z.string().min(2, {
-    message: "City name is required.",
-  }),
+  cityName: z.object({ value: z.string() }).or(z.string()),
   dates: z
     .object({
       from: z.date().refine((date) => !!date, {
@@ -92,10 +93,27 @@ export default function HotelSearch() {
     }
   };
 
+  const { loadOptions, cities } = useGetCities();
+
+  const handleSubmit = (values: z.infer<typeof formSchema>) => {
+    const city =
+      typeof values.cityName === "object"
+        ? (values.cityName as { value: string }).value
+        : values.cityName;
+
+    console.log({
+      cityName: city,
+      adults: values.adultsAndRooms.adults,
+      rooms: values.adultsAndRooms.rooms,
+      dates: values.dates,
+    });
+  };
+
   return (
     <section className="flex items-center justify-center">
       <Form {...form}>
         <form
+          onSubmit={form.handleSubmit(handleSubmit)}
           className="flex flex-col lg:flex-row lg:mx-auto items-center justify-center space-x-0 lg:space-x-2 space-y-4 lg:space-y-0 rounded-lg sm:mx-0 sm:w-[1250px] w-[300px] "
           autoComplete="off"
         >
@@ -110,13 +128,16 @@ export default function HotelSearch() {
                     <p className="text-xl">Where are you going</p>
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Washington"
+                    <AsyncSelect
                       {...field}
-                      id="cityName"
-                      type="cityName"
-                      name="cityName"
-                      className="h-[38px] shadow-none w-full border-slate-300 border"
+                      placeholder="Tokyo, Japan"
+                      className="bg-gray-200 dark:text-slate-800 rounded-lg border-muted focus:outline-none outline-none text-l text-slate-800 placeholder:text-gray-500"
+                      loadOptions={(inputValue) => loadOptions(inputValue)}
+                      isSearchable
+                      options={cities}
+                      cacheOptions
+                      styles={customStyles}
+                      required
                     />
                   </FormControl>
                   <FormMessage />
@@ -186,15 +207,15 @@ export default function HotelSearch() {
             <FormField
               control={form.control}
               name="adultsAndRooms"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
                   <FormLabel className="text-slate-800 dark:text-white flex items-center">
-                    <User className="mr-2  text-slate-800 dark:text-white" />
+                    <User className="mr-2 text-slate-800 dark:text-white" />
                     <p className="text-xl">Adults & Rooms</p>
                   </FormLabel>
                   <FormControl>
                     <DropdownMenu>
-                      <DropdownMenuTrigger className="flex items-center justify-center border hover:border-[#8B5CF6] focus:border-[#8B5CF6] border-slate-300 h-[38px] rounded-md focus:outline-none text-muted-foreground w-full">
+                      <DropdownMenuTrigger className="flex items-center justify-center border hover:border-[#8B5CF6] focus:border-[#8B5CF6] border-slate-300 h-[38px] rounded-md focus:outline-none text-muted-foreground w-full dark:bg-white dark:text-slate-800">
                         {adultCount}-Adults <Dot /> {roomCount}-Rooms
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
@@ -202,12 +223,14 @@ export default function HotelSearch() {
                           Choose the number of adults and rooms
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="flex items-center justify-between h-12 cursor-pointer focus:bg-white">
-                          <p className="font-medium text-slate-600">Adults</p>
+                        <DropdownMenuItem className="flex items-center justify-between h-12 cursor-pointer focus:bg-white dark:focus:bg-slate-600/80">
+                          <p className="font-medium text-slate-600 dark:text-white">
+                            Adults
+                          </p>
                           <div className="flex items-center gap-x-5">
                             <Button
                               variant="ghost"
-                              className="rounded-full bg-gray-100"
+                              className="rounded-full bg-gray-100 dark:bg-slate-600"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleAdultCountChange(false);
@@ -215,10 +238,12 @@ export default function HotelSearch() {
                             >
                               <span className="font-medium text-2xl"> - </span>
                             </Button>
-                            <span>{adultCount}</span>
+                            <span className="dark:text-white">
+                              {adultCount}
+                            </span>
                             <Button
                               variant="ghost"
-                              className="rounded-full bg-gray-100"
+                              className="rounded-full bg-gray-100 dark:bg-slate-600"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleAdultCountChange(true);
@@ -228,12 +253,14 @@ export default function HotelSearch() {
                             </Button>
                           </div>
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="flex items-center justify-between h-12 focus:bg-white cursor-pointer">
-                          <p className="font-medium text-slate-600">Rooms</p>
+                        <DropdownMenuItem className="flex items-center justify-between h-12 focus:bg-white cursor-pointer dark:focus:bg-slate-600/80">
+                          <p className="font-medium text-slate-600 dark:text-white">
+                            Rooms
+                          </p>
                           <div className="flex items-center gap-x-5">
                             <Button
                               variant="ghost"
-                              className="rounded-full bg-gray-100"
+                              className="rounded-full bg-gray-100 dark:bg-slate-600"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleRoomCountChange(false);
@@ -241,10 +268,10 @@ export default function HotelSearch() {
                             >
                               <span className="font-medium text-2xl"> - </span>
                             </Button>
-                            <span>{roomCount}</span>
+                            <span className="dark:text-white">{roomCount}</span>
                             <Button
                               variant="ghost"
-                              className="rounded-full bg-gray-100"
+                              className="rounded-full bg-gray-100 dark:bg-slate-600"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleRoomCountChange(true);

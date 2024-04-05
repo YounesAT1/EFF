@@ -2,6 +2,7 @@
 import { Footer } from "@/components/Footer";
 import Header from "@/components/Header";
 import HotelSearch from "./HotelSearch";
+import { TrendingDistinations } from "./TrendingDistinations";
 
 const HotelsPage = () => {
   return (
@@ -20,7 +21,10 @@ const HotelsPage = () => {
         </h3>
         <HotelSearch />
       </section>
-      {/* <Footer /> */}
+      <section className="max-w-7xl mx-auto p-6 mt-8">
+        <TrendingDistinations />
+      </section>
+      <Footer />
     </>
   );
 };
