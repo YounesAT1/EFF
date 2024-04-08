@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import TaxiSearch from "./TaxiSearch";
 
 const TaxisPages = () => {
   return (
@@ -15,6 +16,7 @@ const TaxisPages = () => {
           Enjoy seamless transfers to and from airports, hotels, and more. Book
           your hassle-free transportation today.
         </h3>
+        <TaxiSearch />
       </section>
 
       {/* <Footer /> */}
