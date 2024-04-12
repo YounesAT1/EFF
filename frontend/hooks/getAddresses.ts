@@ -1,9 +1,17 @@
 import axios, { AxiosResponse } from "axios";
 import { v4 as uuidv4 } from "uuid";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { PickUpCoordinatesContext } from "@/context/pickUpContext";
+import { DropOffCoordinatesContext } from "@/context/dropOffContext";
 
 const useGetAddresses = () => {
   const [addresses, setAddresses] = useState([]);
+  const { pickUpCoordinates, setPickUpCoordinates } = useContext(
+    PickUpCoordinatesContext
+  );
+  const { dropOfCoordinates, setDropOffCoordinates } = useContext(
+    DropOffCoordinatesContext
+  );
   const sessionToken = uuidv4();
 
   const loadOptions = async (inputValue: string) => {
@@ -33,6 +41,7 @@ const useGetAddresses = () => {
             return {
               value: suggestion.full_address,
               label: suggestion.full_address,
+              id: suggestion.mapbox_id,
             };
           }
           return null;
@@ -48,7 +57,39 @@ const useGetAddresses = () => {
     }
   };
 
-  return { addresses, loadOptions };
+  const handleSelectePickUpAdresse = async (pickUp: any) => {
+    try {
+      const response: AxiosResponse<any> = await axios.get(
+        `https://api.mapbox.com/search/searchbox/v1/retrieve/${pickUp.id}?session_token=${sessionToken}&access_token=pk.eyJ1IjoieW91bmVzLWF0IiwiYSI6ImNsdXF3NjVjNjAweWMycWtjaXdwM25ja3oifQ.3xljpae2D3lDzTWhc0Co2Q`
+      );
+      const lng = response.data.features[0].geometry.coordinates[0];
+      const lat = response.data.features[0].geometry.coordinates[1];
+      setPickUpCoordinates({ lng, lat });
+    } catch (error) {
+      console.log("Error fetching pick-up address:", error);
+    }
+  };
+
+  const handleSelectedDropOffAddresse = async (dropOff: any) => {
+    try {
+      const response: AxiosResponse<any> = await axios.get(
+        `https://api.mapbox.com/search/searchbox/v1/retrieve/${dropOff.id}?session_token=${sessionToken}&access_token=pk.eyJ1IjoieW91bmVzLWF0IiwiYSI6ImNsdXF3NjVjNjAweWMycWtjaXdwM25ja3oifQ.3xljpae2D3lDzTWhc0Co2Q`
+      );
+      const lng = response.data.features[0].geometry.coordinates[0];
+      const lat = response.data.features[0].geometry.coordinates[1];
+      setDropOffCoordinates({ lng, lat });
+      console.log(dropOfCoordinates);
+    } catch (error) {
+      console.log("Error fetching drop-off address:", error);
+    }
+  };
+
+  return {
+    addresses,
+    loadOptions,
+    handleSelectePickUpAdresse,
+    handleSelectedDropOffAddresse,
+  };
 };
 
 export default useGetAddresses;

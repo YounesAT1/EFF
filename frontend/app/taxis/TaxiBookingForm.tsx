@@ -11,6 +11,7 @@ import {
   FormMessage,
   Form,
 } from "@/components/ui/form";
+import { Button } from "@/components/ui/Button";
 import AsyncSelect from "react-select/async";
 import { customStyles } from "@/lib/selectStyles";
 import { MapPin } from "lucide-react";
@@ -35,12 +36,18 @@ export default function TaxiBookingForm() {
     },
   });
 
-  const { loadOptions, addresses } = useGetAddresses();
+  const {
+    loadOptions,
+    addresses,
+    handleSelectePickUpAdresse,
+    handleSelectedDropOffAddresse,
+  } = useGetAddresses();
+
   return (
     <div className={`p-5 border border-slate-200 rounded-md`}>
       <Form {...form}>
         <form autoComplete="off" className="flex flex-col gap-y-5">
-          <div>
+          <div className="pl-2">
             <FormField
               control={form.control}
               name="destinations.pickUp"
@@ -53,11 +60,11 @@ export default function TaxiBookingForm() {
                   <FormControl>
                     <AsyncSelect
                       {...field}
-                      placeholder="8934 Carriage Ave.
-                      Bronx, NY 10452"
+                      placeholder="8934 Carriage Ave. Bronx, NY 10452"
                       className="bg-gray-200 dark:text-slate-800 rounded-lg border-muted focus:outline-none outline-none text-l text-slate-800 placeholder:text-gray-500 "
                       loadOptions={(inputValue) => loadOptions(inputValue)}
                       isSearchable
+                      onChange={handleSelectePickUpAdresse}
                       options={addresses}
                       cacheOptions
                       styles={customStyles}
@@ -69,7 +76,7 @@ export default function TaxiBookingForm() {
               )}
             />
           </div>
-          <div>
+          <div className="pl-2">
             <FormField
               control={form.control}
               name="destinations.dropOf"
@@ -87,6 +94,7 @@ export default function TaxiBookingForm() {
                       className="bg-gray-200 dark:text-slate-800 rounded-lg border-muted focus:outline-none outline-none text-l text-slate-800 placeholder:text-gray-500"
                       loadOptions={(inputValue) => loadOptions(inputValue)}
                       isSearchable
+                      onChange={handleSelectedDropOffAddresse}
                       options={addresses}
                       cacheOptions
                       styles={customStyles}
@@ -105,6 +113,7 @@ export default function TaxiBookingForm() {
             <h1 className="font-medium text-l">Payment method </h1>
             <Payment />
           </div>
+          <Button className="mt-1">Book</Button>
         </form>
       </Form>
     </div>
