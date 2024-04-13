@@ -5,11 +5,13 @@ import MapBox from "./Map";
 import { UserLocationContext } from "@/context/userLocationContext";
 import { PickUpCoordinatesContext } from "@/context/pickUpContext";
 import { DropOffCoordinatesContext } from "@/context/dropOffContext";
+import { DirectionContext } from "@/context/directionContext";
 
 export default function TaxiSearch() {
   const [userLocation, setUserLocation] = useState<any>();
   const [pickUpCoordinates, setPickUpCoordinates] = useState<any>([]);
   const [dropOfCoordinates, setDropOffCoordinates] = useState<any>([]);
+  const [direction, setDirection] = useState<any>([]);
 
   useEffect(() => {
     getUserLocation();
@@ -32,16 +34,18 @@ export default function TaxiSearch() {
         <DropOffCoordinatesContext.Provider
           value={{ dropOfCoordinates, setDropOffCoordinates }}
         >
-          <div className="mt-6">
-            <div className="grid grid-cols-1 md:grid-cols-3">
-              <div>
-                <TaxiBookingForm />
-              </div>
-              <div className="col-span-2 md:pl-16">
-                <MapBox />
+          <DirectionContext.Provider value={{ direction, setDirection }}>
+            <div className="mt-6">
+              <div className="grid grid-cols-1 md:grid-cols-3">
+                <div>
+                  <TaxiBookingForm />
+                </div>
+                <div className="col-span-2 md:pl-16">
+                  <MapBox />
+                </div>
               </div>
             </div>
-          </div>
+          </DirectionContext.Provider>
         </DropOffCoordinatesContext.Provider>
       </PickUpCoordinatesContext.Provider>
     </UserLocationContext.Provider>

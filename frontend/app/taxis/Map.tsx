@@ -7,11 +7,16 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import Markers from "./Markers";
 import { PickUpCoordinatesContext } from "@/context/pickUpContext";
 import { DropOffCoordinatesContext } from "@/context/dropOffContext";
+import useGetAddresses from "@/hooks/getAddresses";
+import { DirectionContext } from "@/context/directionContext";
+import MapRoute from "./MapRoute";
 
 export default function MapBox() {
   const { userLocation } = React.useContext(UserLocationContext);
   const { pickUpCoordinates } = React.useContext(PickUpCoordinatesContext);
   const { dropOfCoordinates } = React.useContext(DropOffCoordinatesContext);
+  const { direction } = React.useContext(DirectionContext);
+  const { getDirectionRoote } = useGetAddresses();
 
   const mapRef = React.useRef<any>();
 
@@ -31,6 +36,16 @@ export default function MapBox() {
         duration: 2500,
       });
     }
+
+    if (
+      pickUpCoordinates.lng !== undefined &&
+      pickUpCoordinates.lat !== undefined &&
+      dropOfCoordinates.lng !== undefined &&
+      dropOfCoordinates.lat !== undefined
+    ) {
+      getDirectionRoote();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dropOfCoordinates]);
 
   return (
@@ -48,6 +63,12 @@ export default function MapBox() {
           mapStyle="mapbox://styles/mapbox/streets-v9"
         >
           <Markers />
+
+          {direction?.data?.routes ? (
+            <MapRoute
+              coordinates={direction.data.routes[0].geometry.coordinates}
+            />
+          ) : null}
         </Map>
       ) : null}
     </div>

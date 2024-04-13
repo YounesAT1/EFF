@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useContext, useState } from "react";
 import { PickUpCoordinatesContext } from "@/context/pickUpContext";
 import { DropOffCoordinatesContext } from "@/context/dropOffContext";
+import { DirectionContext } from "@/context/directionContext";
 
 const useGetAddresses = () => {
   const [addresses, setAddresses] = useState([]);
@@ -12,6 +13,7 @@ const useGetAddresses = () => {
   const { dropOfCoordinates, setDropOffCoordinates } = useContext(
     DropOffCoordinatesContext
   );
+  const { direction, setDirection } = useContext(DirectionContext);
   const sessionToken = uuidv4();
 
   const loadOptions = async (inputValue: string) => {
@@ -84,11 +86,24 @@ const useGetAddresses = () => {
     }
   };
 
+  const getDirectionRoote = async () => {
+    const response: AxiosResponse<any> = await axios.get(
+      `https://api.mapbox.com/directions/v5/mapbox/driving/${pickUpCoordinates.lng},${pickUpCoordinates.lat};${dropOfCoordinates.lng},${dropOfCoordinates.lat}?overview=full&geometries=geojson&access_token=pk.eyJ1IjoieW91bmVzLWF0IiwiYSI6ImNsdXF3NjVjNjAweWMycWtjaXdwM25ja3oifQ.3xljpae2D3lDzTWhc0Co2Q`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    setDirection(response);
+  };
+
   return {
     addresses,
     loadOptions,
     handleSelectePickUpAdresse,
     handleSelectedDropOffAddresse,
+    getDirectionRoote,
   };
 };
 

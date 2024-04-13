@@ -35,7 +35,7 @@ export default function Markers() {
             latitude={Number(pickUpCoordinates?.lat)}
             anchor="bottom"
           >
-            <Image src="/marker.png" alt="marker" width={40} height={40} />
+            <Image src="/marker3.png" alt="marker" width={40} height={40} />
           </Marker>
         )}
 
@@ -49,7 +49,7 @@ export default function Markers() {
             latitude={Number(dropOfCoordinates?.lat)}
             anchor="bottom"
           >
-            <Image src="/marker.png" alt="marker" width={40} height={40} />
+            <Image src="/marker3.png" alt="marker" width={40} height={40} />
           </Marker>
         )}
     </div>

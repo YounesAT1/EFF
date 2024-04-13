@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import TaxiSearch from "./TaxiSearch";
+import { Footer } from "@/components/Footer";
 
 const TaxisPages = () => {
   return (
@@ -19,7 +20,7 @@ const TaxisPages = () => {
         <TaxiSearch />
       </section>
 
-      {/* <Footer /> */}
+      <Footer />
     </>
   );
 };
