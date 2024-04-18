@@ -8,7 +8,7 @@ import { PickUpCoordinatesContext } from "@/context/pickUpContext";
 import { DropOffCoordinatesContext } from "@/context/dropOffContext";
 
 export default function Markers() {
-  const { userLocation } = React.useContext(UserLocationContext);
+  // const { userLocation } = React.useContext(UserLocationContext);
 
   const { pickUpCoordinates } = React.useContext(PickUpCoordinatesContext);
   const { dropOfCoordinates } = React.useContext(DropOffCoordinatesContext);
@@ -17,13 +17,13 @@ export default function Markers() {
     <div>
       {/* User Marker */}
 
-      <Marker
+      {/* <Marker
         longitude={Number(userLocation?.lng)}
         latitude={Number(userLocation?.lat)}
         anchor="bottom"
       >
         <Image src="/marker.png" alt="marker" width={40} height={40} />
-      </Marker>
+      </Marker> */}
 
       {/* Pick Up Marker */}
 

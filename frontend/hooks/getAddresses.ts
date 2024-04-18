@@ -1,22 +1,42 @@
 import axios, { AxiosResponse } from "axios";
 import { v4 as uuidv4 } from "uuid";
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { PickUpCoordinatesContext } from "@/context/pickUpContext";
 import { DropOffCoordinatesContext } from "@/context/dropOffContext";
 import { DirectionContext } from "@/context/directionContext";
+import { UserLocationContext } from "@/context/userLocationContext";
+import UserLocationLabel from "@/components/UserLocationLabel";
 
 const useGetAddresses = () => {
-  const [addresses, setAddresses] = useState([]);
+  const [addresses, setAddresses] = useState<any>([]);
   const { pickUpCoordinates, setPickUpCoordinates } = useContext(
     PickUpCoordinatesContext
   );
   const { dropOfCoordinates, setDropOffCoordinates } = useContext(
     DropOffCoordinatesContext
   );
-  const { direction, setDirection } = useContext(DirectionContext);
+  const { setDirection } = useContext(DirectionContext);
+  const { userLocation } = useContext(UserLocationContext);
+
   const sessionToken = uuidv4();
 
+  const getUserAddresse = async () => {
+    const response: AxiosResponse<any> = await axios.get(
+      `https://api.mapbox.com/search/geocode/v6/reverse?longitude=${userLocation.lng}&latitude=${userLocation.lat}&worldview=&access_token=pk.eyJ1IjoieW91bmVzLWF0IiwiYSI6ImNsdXF3NjVjNjAweWMycWtjaXdwM25ja3oifQ.3xljpae2D3lDzTWhc0Co2Q`
+    );
+
+    const userAddresse = {
+      value: response.data.features[0].properties.full_address,
+      label: React.createElement(UserLocationLabel),
+      id: response.data.features[0].properties.mapbox_id,
+    };
+
+    return userAddresse;
+  };
+
   const loadOptions = async (inputValue: string) => {
+    const userAddresse = await getUserAddresse();
+
     try {
       const response: AxiosResponse<any> = await axios.get(
         `https://api.mapbox.com/search/searchbox/v1/suggest`,
@@ -50,9 +70,12 @@ const useGetAddresses = () => {
         })
         .filter((option: any) => option !== null);
 
-      setAddresses(addressOptions);
+      console.log(userAddresse);
+      const optionsWithUserAddress = [userAddresse, ...addressOptions];
 
-      return addressOptions;
+      setAddresses(optionsWithUserAddress);
+
+      return optionsWithUserAddress;
     } catch (error) {
       console.error("Error fetching addresses:", error);
       return [];

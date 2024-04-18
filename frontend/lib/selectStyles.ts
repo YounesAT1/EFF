@@ -19,8 +19,9 @@ export const customStyles: Styles = {
     padding: 10,
     borderRadius: 8,
     fontSize: "0.9rem",
+    cursor: "pointer",
     "&:hover": {
-      backgroundColor: "#8B5CF6",
+      backgroundColor: state.isSelected ? "#3182CE" : "#8B5CF6",
       color: "#FFFFFF",
     },
   }),
@@ -31,6 +32,9 @@ export const customStyles: Styles = {
   }),
   menuList: (provided: any) => ({
     ...provided,
+    "& > :first-child:hover": {
+      backgroundColor: "transparent !important",
+    },
     "&::-webkit-scrollbar": {
       width: 6,
     },

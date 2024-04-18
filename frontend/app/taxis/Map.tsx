@@ -11,6 +11,7 @@ import useGetAddresses from "@/hooks/getAddresses";
 import { DirectionContext } from "@/context/directionContext";
 import MapRoute from "./MapRoute";
 import DistanceAndTime from "./DistanceAndTime";
+import { MapLoader } from "./MapLoader";
 
 export default function MapBox() {
   const { userLocation } = React.useContext(UserLocationContext);
@@ -48,6 +49,14 @@ export default function MapBox() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dropOfCoordinates]);
+
+  if (!userLocation) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <MapLoader />
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-lg overflow-hidden relative">
