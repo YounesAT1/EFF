@@ -4,6 +4,7 @@ import AsyncSelect from "react-select/async";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 
 import { Button } from "./ui/Button";
 import {
@@ -25,6 +26,7 @@ import { Calendar } from "./ui/calendar";
 import { cn } from "@/lib/utils";
 import { customStyles } from "@/lib/selectStyles";
 import useAirportOptions from "@/hooks/loadAirports";
+import useGetFlights from "@/hooks/getFlights";
 
 const formSchema = z.object({
   departure: z.object({ value: z.string() }).or(z.string()),
@@ -47,6 +49,8 @@ const formSchema = z.object({
 });
 
 const FlightSearch = () => {
+  const router = useRouter();
+
   //? FROM VALIDATION WITH ZOD
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -62,7 +66,7 @@ const FlightSearch = () => {
   });
 
   //? FILGHT SEARCH SUBMIT FUNCTION
-  const handleSubmit = (values: z.infer<typeof formSchema>) => {
+  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     const departure =
       typeof values.departure === "object"
         ? (values.departure as { value: string }).value
@@ -72,12 +76,22 @@ const FlightSearch = () => {
         ? (values.arrival as { value: string }).value
         : values.arrival;
 
-    console.log({
-      departure,
-      arrival,
-      dates: values.dates,
-      passengers: values.numberOfPassengers,
-    });
+    const formattedFromDate =
+      values.dates.from?.toISOString().slice(0, 10) ?? "";
+    const formattedToDate = values.dates.to?.toISOString().slice(0, 10) ?? "";
+
+    // await getFlights(
+    //   departure,
+    //   arrival,
+    //   formattedFromDate,
+    //   formattedToDate,
+    //   values.numberOfPassengers,
+    //   6
+    // );
+
+    const url = `/flight?departure=${departure}&arrival=${arrival}&from=${formattedFromDate}&to=${formattedToDate}&passengers=${values.numberOfPassengers}`;
+
+    await router.push(url);
 
     form.reset();
   };

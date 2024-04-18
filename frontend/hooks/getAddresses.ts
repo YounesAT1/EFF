@@ -22,7 +22,7 @@ const useGetAddresses = () => {
 
   const getUserAddresse = async () => {
     const response: AxiosResponse<any> = await axios.get(
-      `https://api.mapbox.com/search/geocode/v6/reverse?longitude=${userLocation.lng}&latitude=${userLocation.lat}&worldview=&access_token=pk.eyJ1IjoieW91bmVzLWF0IiwiYSI6ImNsdXF3NjVjNjAweWMycWtjaXdwM25ja3oifQ.3xljpae2D3lDzTWhc0Co2Q`
+      `https://api.mapbox.com/search/geocode/v6/reverse?longitude=${userLocation.lng}&latitude=${userLocation.lat}&access_token=pk.eyJ1IjoieW91bmVzLWF0IiwiYSI6ImNsdXF3NjVjNjAweWMycWtjaXdwM25ja3oifQ.3xljpae2D3lDzTWhc0Co2Q`
     );
 
     const userAddresse = {
@@ -47,7 +47,7 @@ const useGetAddresses = () => {
             limit: 5,
             session_token: sessionToken,
             proximity: "-83.748708,42.265837",
-            country: "US,CA,GB,MA",
+            // country: "US,CA,GB,MA",
             access_token:
               "pk.eyJ1IjoieW91bmVzLWF0IiwiYSI6ImNsdXF3NjVjNjAweWMycWtjaXdwM25ja3oifQ.3xljpae2D3lDzTWhc0Co2Q",
           },
