@@ -14,8 +14,8 @@ const TaxisPages = () => {
           </span>
         </h2>
         <h3 className="text-slate-500 py-5 text-xl dark:text-slate-100">
-          Enjoy seamless transfers to and from airports, hotels, and more. Book
-          your hassle-free transportation today.
+          Enjoy seamless transfers anywhere, anytime. Book your hassle-free
+          transportation today.
         </h3>
         <TaxiSearch />
       </section>

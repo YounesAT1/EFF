@@ -10,6 +10,7 @@ import { DropOffCoordinatesContext } from "@/context/dropOffContext";
 import useGetAddresses from "@/hooks/getAddresses";
 import { DirectionContext } from "@/context/directionContext";
 import MapRoute from "./MapRoute";
+import DistanceAndTime from "./DistanceAndTime";
 
 export default function MapBox() {
   const { userLocation } = React.useContext(UserLocationContext);
@@ -49,7 +50,7 @@ export default function MapBox() {
   }, [dropOfCoordinates]);
 
   return (
-    <div className="rounded-lg overflow-hidden">
+    <div className="rounded-lg overflow-hidden relative">
       {userLocation ? (
         <Map
           ref={mapRef}
@@ -71,6 +72,11 @@ export default function MapBox() {
           ) : null}
         </Map>
       ) : null}
+      {direction && (
+        <div className="absolute top-0 right-0 p-3 rounded-md bg-opacity-50 backdrop-blur-lg backdrop-filter backdrop-saturate-150 dark:bg-black dark:bg-opacity-50 dark:backdrop-blur-lg dark:backdrop-filter dark:backdrop-saturate-150 text-violet-800 w-full dark:text-purple-900">
+          <DistanceAndTime />
+        </div>
+      )}
     </div>
   );
 }

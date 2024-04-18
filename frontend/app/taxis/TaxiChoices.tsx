@@ -1,10 +1,19 @@
 "use client";
+import { DirectionContext } from "@/context/directionContext";
 import { taxiOption } from "@/lib/taxiOptions";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 export default function TaxiChoices() {
   const [selectedTaxiOption, setSelectedTaxiOption] = useState<any>();
+  const { direction } = useContext(DirectionContext);
+
+  const getCost = (charges: any) => {
+    const distanceInMeters = direction?.data?.routes[0].distance;
+    const distanceInKilometers = distanceInMeters ? distanceInMeters / 1000 : 0;
+    return (charges * distanceInKilometers).toFixed(2);
+  };
+
   return (
     <div>
       <h1 className="font-medium text-l">Select a car </h1>
@@ -32,9 +41,11 @@ export default function TaxiChoices() {
               <h2 className="text-sm text-slate-700 dark:text-slate-100">
                 {taxi.name}
               </h2>
-              <span className=" text-sm font-semibold">
-                {taxi.charges * 8} $
-              </span>
+              {direction && (
+                <span className=" text-sm font-semibold">
+                  {getCost(taxi.charges)} $
+                </span>
+              )}
             </div>
           </div>
         ))}
