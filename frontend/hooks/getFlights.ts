@@ -1,36 +1,35 @@
 import { useState } from "react";
-import useAmadeusToken from "./getAccessToken";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
+import useAmadeusTokenOne from "./getAccessToken1";
 
-type flightProps = {
+interface FlightParams {
   originLocationCode: string;
   destinationLocationCode: string;
   departureDate: string;
   returnDate: string;
   adults: number;
-  max: number;
-};
+  travelClass: string;
+}
 
 const useGetFlights = () => {
-  const [flights, setFlights] = useState([]);
+  const [flights, setFlights] = useState<any>([]);
 
-  const token = useAmadeusToken();
-
+  const token = useAmadeusTokenOne();
   const getFlights = async ({
     originLocationCode,
     destinationLocationCode,
     departureDate,
     returnDate,
     adults,
-    max,
-  }: flightProps) => {
+    travelClass,
+  }: FlightParams) => {
     const params = {
-      originLocationCode: originLocationCode,
-      destinationLocationCode: destinationLocationCode,
-      departureDate: departureDate,
-      returnDate: returnDate,
-      adults: adults,
-      max: max,
+      originLocationCode,
+      destinationLocationCode,
+      departureDate,
+      returnDate,
+      adults,
+      travelClass,
     };
 
     const apiUrl = "https://test.api.amadeus.com/v2/shopping/flight-offers";
@@ -43,7 +42,10 @@ const useGetFlights = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response);
+
+      console.log("Flight Data:", response.data);
+      console.log("Number of Flight Offers:", response.data.meta.count);
+
       setFlights(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);

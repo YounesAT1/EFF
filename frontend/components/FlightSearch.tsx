@@ -20,13 +20,22 @@ import {
   PersonStanding,
   PlaneLanding,
   PlaneTakeoff,
+  RockingChair,
 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Calendar } from "./ui/calendar";
 import { cn } from "@/lib/utils";
 import { customStyles } from "@/lib/selectStyles";
 import useAirportOptions from "@/hooks/loadAirports";
-import useGetFlights from "@/hooks/getFlights";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 const formSchema = z.object({
   departure: z.object({ value: z.string() }).or(z.string()),
@@ -46,6 +55,7 @@ const formSchema = z.object({
   numberOfPassengers: z.number().refine((value) => value >= 1, {
     message: "Please select at least 1 passenger.",
   }),
+  cabin: z.string(),
 });
 
 const FlightSearch = () => {
@@ -62,6 +72,7 @@ const FlightSearch = () => {
         to: undefined,
       },
       numberOfPassengers: 0,
+      cabin: "",
     },
   });
 
@@ -79,20 +90,12 @@ const FlightSearch = () => {
     const formattedFromDate =
       values.dates.from?.toISOString().slice(0, 10) ?? "";
     const formattedToDate = values.dates.to?.toISOString().slice(0, 10) ?? "";
+    const passengers = values.numberOfPassengers;
+    const cabin = values.cabin;
 
-    // await getFlights(
-    //   departure,
-    //   arrival,
-    //   formattedFromDate,
-    //   formattedToDate,
-    //   values.numberOfPassengers,
-    //   6
-    // );
+    const url = `/flights?departure=${departure}&arrival=${arrival}&from=${formattedFromDate}&to=${formattedToDate}&passengers=${passengers}&travelClass=${cabin}`;
 
-    const url = `/flight?departure=${departure}&arrival=${arrival}&from=${formattedFromDate}&to=${formattedToDate}&passengers=${values.numberOfPassengers}`;
-
-    await router.push(url);
-
+    router.push(url);
     form.reset();
   };
 
@@ -217,7 +220,49 @@ const FlightSearch = () => {
             }}
           />
         </div>
-        <div className="grid w-[200px] lg:max-x-sm gap-1.5 items-center justify-center">
+        <div className="grid w-full   gap-1.5">
+          <FormField
+            control={form.control}
+            name="cabin"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="mr-2 text-slate-800 dark:text-white flex items-center">
+                  <RockingChair className="mr-2 text-slate-800 dark:text-white" />
+                  <p className="text-xl">Cabin class</p>
+                </FormLabel>
+                <FormControl>
+                  <Select onValueChange={field.onChange}>
+                    <SelectTrigger className="w-full shadow-none outline-none dark:bg-white dark:text-gray-500  ">
+                      <SelectValue placeholder="Select a cabin class" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Select a cabin class</SelectLabel>
+
+                        <SelectItem value="ECONOMY" className="cursor-pointer">
+                          Economy
+                        </SelectItem>
+                        <SelectItem
+                          value="PREMIUM_ECONOMY"
+                          className="cursor-pointer"
+                        >
+                          Premium economy
+                        </SelectItem>
+                        <SelectItem value="BUISNESS" className="cursor-pointer">
+                          Business
+                        </SelectItem>
+                        <SelectItem value="FIRST" className="cursor-pointer">
+                          First class
+                        </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className="grid w-[200px] lg:max-x-sm gap-1.5 items-center">
           <FormField
             control={form.control}
             name="numberOfPassengers"
