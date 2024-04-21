@@ -1,11 +1,20 @@
-export default function FlightOffre({ offer }: { offer: any }) {
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+type flightOfferProps = {
+  flight: any;
+};
+
+export default function FlightOffre({ flight }: flightOfferProps) {
   return (
-    <div className="border rounded p-4 shadow-md">
-      <h3 className="text-lg font-bold mb-2">Flight Offer</h3>
-      <p>
-        Price: {offer.price.total} {offer.price.currency}
-      </p>
-      {/* Add more details you want to display */}
-    </div>
+    <Card className="border border-indigo-200 shadow-none mb-4">
+      <CardHeader>{flight.id}</CardHeader>
+    </Card>
   );
 }
