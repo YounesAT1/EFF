@@ -30,11 +30,13 @@ export const customStyles: Styles = {
     borderRadius: 8,
     boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
   }),
-  menuList: (provided: any) => ({
+  menuList: (provided: any, state: { selectProps: { className: string } }) => ({
     ...provided,
-    "& > :first-child:hover": {
-      backgroundColor: "transparent !important",
-    },
+    "& > :first-child": !state.selectProps.className.includes("flight")
+      ? {
+          backgroundColor: "#FFFFFF !important",
+        }
+      : {},
     "&::-webkit-scrollbar": {
       width: 6,
     },

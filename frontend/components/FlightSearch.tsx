@@ -122,7 +122,7 @@ const FlightSearch = () => {
                   <AsyncSelect
                     {...field}
                     placeholder="New york"
-                    className="bg-gray-100 dark:text-slate-800 rounded-lg text-l text-slate-800 placeholder:text-gray-500"
+                    className="bg-gray-100 dark:text-slate-800 rounded-lg text-l text-slate-800 placeholder:text-gray-500 flight"
                     loadOptions={(inputValue) => loadOptions(inputValue)}
                     options={airportOptions}
                     isSearchable
@@ -151,7 +151,7 @@ const FlightSearch = () => {
                   <AsyncSelect
                     {...field}
                     placeholder="Paris"
-                    className="bg-gray-200 dark:text-slate-800 rounded-lg border-muted focus:outline-none outline-none text-l text-slate-800 placeholder:text-gray-500"
+                    className="bg-gray-200 dark:text-slate-800 rounded-lg border-muted focus:outline-none outline-none text-l text-slate-800 placeholder:text-gray-500 flight"
                     loadOptions={(inputValue) => loadOptions(inputValue)}
                     isSearchable
                     cacheOptions
