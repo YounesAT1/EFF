@@ -19,6 +19,9 @@ export default function FlightsPage() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [numberOfPages, setNumberOfPages] = useState<number>(1);
   const [totalOffers, setTotalOffers] = useState<number>(0);
+  const [dictionaries, setDictionaries] = useState<any[]>([]);
+
+  console.log(token);
 
   const {
     departure: originLocationCode,
@@ -28,7 +31,7 @@ export default function FlightsPage() {
     passengers: adults,
     travelClass,
   } = Object.fromEntries(searchParams.entries());
-
+  console.log(token);
   useEffect(() => {
     const fetchFlightOffers = async () => {
       setIsLoading(true); // Set isLoading to true before fetching data
@@ -58,10 +61,13 @@ export default function FlightsPage() {
         const totalPagesCount = Math.ceil(totalOffersCount / 10);
         setNumberOfPages(totalPagesCount);
 
+        setDictionaries(response.data.dictionaries);
+
         const slicedData = response.data.data.slice(
           (currentPage - 1) * 10,
           currentPage * 10
         );
+        console.log(slicedData[0]);
         setFlightOfferData(slicedData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -135,7 +141,7 @@ export default function FlightsPage() {
             </div>
             {flightOfferData.map((flight: any) => (
               <div key={flight.id} className="px-4">
-                <FlightOffre flight={flight} />
+                <FlightOffre flight={flight} dictionaries={dictionaries} />
               </div>
             ))}
             <div className="flex justify-center mt-4 gap-x-3 my-16">
