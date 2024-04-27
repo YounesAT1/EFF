@@ -10,24 +10,16 @@ import useAmadeusTokenOne from "@/hooks/getAccessToken1";
 import { Button } from "@/components/ui/Button";
 import { Footer } from "@/components/Footer";
 
-interface FlightParams {
-  originLocationCode: string;
-  destinationLocationCode: string;
-  departureDate: string;
-  returnDate: string;
-  adults: number;
-  travelClass: string;
-}
-
 export default function FlightsPage() {
+  const token = useAmadeusTokenOne();
+  const searchParams = useSearchParams();
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [flightOfferData, setFlightOfferData] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [numberOfPages, setNumberOfPages] = useState<number>(1);
   const [totalOffers, setTotalOffers] = useState<number>(0);
-  const token = useAmadeusTokenOne();
 
-  const searchParams = useSearchParams();
   const {
     departure: originLocationCode,
     arrival: destinationLocationCode,
@@ -106,7 +98,9 @@ export default function FlightsPage() {
       <Header />
       <section className="mx-auto max-w-7xl ">
         {isLoading ? (
-          <h1>Loading...</h1>
+          <div className="flex items-center justify-center">
+            <h1>Loading....</h1>
+          </div>
         ) : (
           <>
             <div className="max-w-6xl mx-auto p-5 ">
@@ -127,7 +121,7 @@ export default function FlightsPage() {
                   flight offers
                   <span className="text-pink-600 italic decoration-wavy	 underline">
                     {" "}
-                    {""}for you
+                    {""}for you {""}
                   </span>
                   !
                 </h1>
@@ -163,7 +157,14 @@ export default function FlightsPage() {
                 </div>
               </>
             ) : (
-              <h1>No flight available</h1>
+              <div className="flex items-center justify-center h-full">
+                <h1 className="text-red-500 bg-red-300 rounded text-3xl p-3 font-semibold">
+                  <span className=" italic decoration-wavy	 underline">
+                    Opps !!
+                  </span>{" "}
+                  No flight were found!
+                </h1>
+              </div>
             )}
           </>
         )}

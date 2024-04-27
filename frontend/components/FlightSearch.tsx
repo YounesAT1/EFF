@@ -262,7 +262,7 @@ const FlightSearch = () => {
             )}
           />
         </div>
-        <div className="grid w-[200px] lg:max-x-sm gap-1.5 items-center">
+        <div className=" w-[200px] lg:max-x-sm gap-1.5  flex items-center justify-center flex-col">
           <FormField
             control={form.control}
             name="numberOfPassengers"

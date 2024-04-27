@@ -20,13 +20,13 @@ type User = {
 
 type AuthContextProps = {
   user: User | null;
-  isLoading: boolean;
   error: string | null;
+  isLoading: boolean;
   emptyForm: boolean;
-  login: (data: loginPropsType) => Promise<void>;
-  register: (data: registerPropsType) => Promise<void>;
   getUser: () => Promise<void>;
   logout: () => void;
+  register: (data: registerPropsType) => Promise<void>;
+  login: (data: loginPropsType) => Promise<void>;
 };
 
 type loginPropsType = {
@@ -47,19 +47,20 @@ const AuthContext = createContext<AuthContextProps>({
   isLoading: false,
   error: null,
   emptyForm: false,
-  login: async () => {},
-  register: async () => {},
   getUser: async () => {},
   logout: () => {},
+  login: async () => {},
+  register: async () => {},
 });
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const router = useRouter();
+  const randomToken = uuidv4();
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [emptyForm, setEmptyForm] = useState(false);
-  const router = useRouter();
-  const randomToken = uuidv4();
 
   const csrfToken = () => axiosClient.get("/sanctum/csrf-cookie");
 

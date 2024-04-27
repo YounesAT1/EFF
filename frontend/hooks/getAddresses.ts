@@ -70,7 +70,7 @@ const useGetAddresses = () => {
         })
         .filter((option: any) => option !== null);
 
-      console.log(userAddresse);
+      // console.log(userAddresse);
       const optionsWithUserAddress = [userAddresse, ...addressOptions];
 
       setAddresses(optionsWithUserAddress);
