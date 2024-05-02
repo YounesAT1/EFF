@@ -67,7 +67,6 @@ export default function FlightsPage() {
           (currentPage - 1) * 10,
           currentPage * 10
         );
-        console.log(slicedData[0]);
         setFlightOfferData(slicedData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -140,7 +139,7 @@ export default function FlightsPage() {
               </div>
             </div>
             {flightOfferData.map((flight: any) => (
-              <div key={flight.id} className="px-4">
+              <div key={flight.id} className="px-4 my-3">
                 <FlightOffre flight={flight} dictionaries={dictionaries} />
               </div>
             ))}

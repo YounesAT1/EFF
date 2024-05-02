@@ -12,3 +12,21 @@ export function getInitials(person: Person): string {
   const lastNameInitial = person.lastName.charAt(0).toUpperCase();
   return `${firstNameInitial}${lastNameInitial}`;
 }
+
+export const formatTime = (time: string) => {
+  const date = new Date(time);
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  return `${hours}:${minutes}`;
+};
+
+// Utility function to format duration to HH MM
+export const formatDuration = (durationMs: number) => {
+  const hours = Math.floor(durationMs / (1000 * 60 * 60))
+    .toString()
+    .padStart(2, "0");
+  const minutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60))
+    .toString()
+    .padStart(2, "0");
+  return `${hours}h ${minutes}m`;
+};
