@@ -30,3 +30,14 @@ export const formatDuration = (durationMs: number) => {
     .padStart(2, "0");
   return `${hours}h ${minutes}m`;
 };
+
+export const formatDurationString = (duration: string): string => {
+  const regex = /PT(\d+)H(\d+)M/;
+  const match = duration.match(regex);
+  if (match) {
+    const hours = parseInt(match[1]);
+    const minutes = parseInt(match[2]);
+    return `${hours}h ${minutes}m`;
+  }
+  return "";
+};

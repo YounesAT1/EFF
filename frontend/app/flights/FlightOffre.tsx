@@ -1,9 +1,17 @@
 import React from "react";
-import { formatOutboundFlightInfo } from "./outboundFlight";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/Button";
-import { formatReturnFlightInfo } from "./returnFlight";
+import Image from "next/image";
+import { airlineInfo } from "@/lib/airlineData";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { formatDurationString } from "@/lib/helpers";
+import { formatedFlight } from "./formatedFlight";
 
 type FlightOfferProps = {
   flight: any;
@@ -16,27 +24,51 @@ export default function FlightOffer({
 }: FlightOfferProps) {
   //! THE OUTBOUND FLIGHT
   const outboundSegments = flight.itineraries[0].segments;
-  const outboundFlightInfo = formatOutboundFlightInfo(
-    outboundSegments,
-    dictionaries
+
+  const outboundFlightInfo = formatedFlight(outboundSegments, dictionaries);
+
+  const outboundAirline = airlineInfo.filter((airline) =>
+    outboundFlightInfo.IATA.includes(airline.id)
   );
+
+  const outboundDuration = formatDurationString(flight.itineraries[0].duration);
 
   //! THE RETURN FLIGHT
   const returnSegments = flight.itineraries[1].segments;
-  const returnFlightInfo = formatReturnFlightInfo(returnSegments, dictionaries);
+
+  const returnFlightInfo = formatedFlight(returnSegments, dictionaries);
+
+  const returnDuration = formatDurationString(flight.itineraries[1].duration);
+
+  const returnAirline = airlineInfo.filter((airline) =>
+    returnFlightInfo.IATA.includes(airline.id)
+  );
+
+  const plusDays = ["¹", "²", "³"];
 
   return (
     <Card className="flex items-center justify-between py-4 px-5 shadow-none">
       <div className="flex flex-col items-center w-full">
         <CardContent className="flex items-center  p-4 w-full">
-          <div className="flex flex-col w-[240px]">
-            {outboundFlightInfo.airlines.map((airline, index) => (
-              <p
-                className="text-sm font-semibold text-slate-700 inline dark:text-white"
-                key={index}
-              >
-                {airline}
-              </p>
+          <div className="flex items-center gap-x-5 w-[140px]">
+            {outboundAirline.map((airline, index) => (
+              <TooltipProvider key={index}>
+                <Tooltip>
+                  <TooltipTrigger asChild className="cursor-pointer">
+                    <Image
+                      src={`https://images.kiwi.com/airlines/64/${airline.id}.png`}
+                      alt={airline.name}
+                      width={50}
+                      height={30}
+                      priority
+                      quality={90}
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-sm font-semibold">{airline.name}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             ))}
           </div>
 
@@ -50,7 +82,7 @@ export default function FlightOffer({
               </p>
             </div>
             <div className="flex flex-col items-center w-full justify-center">
-              <p>{outboundFlightInfo.totalDuration}</p>
+              <p>{outboundDuration}</p>
               <Separator className=" bg-slate-600 rounded my-1 dark:bg-white" />
               {outboundFlightInfo.overlays ? (
                 <div className="flex flex-col items-center">
@@ -83,14 +115,25 @@ export default function FlightOffer({
         </CardContent>
 
         <CardContent className="flex   items-center p-4 w-full">
-          <div className="flex flex-col w-[240px]">
-            {returnFlightInfo.airlines.map((airline, index) => (
-              <p
-                className="text-sm font-semibold text-slate-700 inline dark:text-white"
-                key={index}
-              >
-                {airline}
-              </p>
+          <div className="flex items-center gap-x-5 w-[140px]">
+            {returnAirline.map((airline, index) => (
+              <TooltipProvider key={index}>
+                <Tooltip>
+                  <TooltipTrigger asChild className="cursor-pointer">
+                    <Image
+                      src={`https://images.kiwi.com/airlines/64/${airline.id}.png`}
+                      alt={airline.name}
+                      width={50}
+                      height={30}
+                      priority
+                      quality={90}
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-sm font-semibold">{airline.name}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             ))}
           </div>
 
@@ -104,7 +147,7 @@ export default function FlightOffer({
               </p>
             </div>
             <div className="flex flex-col items-center w-full">
-              <p>{returnFlightInfo.totalDuration}</p>
+              <p>{returnDuration}</p>
               <Separator className=" bg-slate-600 rounded my-1 dark:bg-white" />
               {returnFlightInfo.overlays ? (
                 <div className="flex flex-col items-center">

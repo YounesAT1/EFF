@@ -103,11 +103,11 @@ export default function FlightsPage() {
     <>
       <Header />
       <section className="mx-auto max-w-7xl">
-        {isLoading || flightOfferData.length === 0 ? ( // Show loader when isLoading is true
+        {isLoading || flightOfferData.length === 0 ? (
           <div className="flex items-center justify-center h-screen">
             <Loader />
           </div>
-        ) : flightOfferData.length > 0 && !isLoading ? ( // Show flight offers if flightOfferData has items
+        ) : flightOfferData.length > 0 && !isLoading ? (
           <>
             <div className="max-w-6xl mx-auto p-5">
               <div className="flex items-center gap-x-4 justify-center mb-12">
