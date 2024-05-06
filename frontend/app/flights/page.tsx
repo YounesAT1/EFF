@@ -34,7 +34,7 @@ export default function FlightsPage() {
   console.log(token);
   useEffect(() => {
     const fetchFlightOffers = async () => {
-      setIsLoading(true); // Set isLoading to true before fetching data
+      setIsLoading(true);
 
       const params = {
         originLocationCode,

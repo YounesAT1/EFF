@@ -41,3 +41,28 @@ export const formatDurationString = (duration: string): string => {
   }
   return "";
 };
+
+export function formatDate(dateString: any) {
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const [year, month, day] = dateString.split("-");
+  const formattedDate = new Date(year, month - 1, day);
+  const dayOfWeek = formattedDate.toLocaleDateString("en", { weekday: "long" });
+  const monthName = months[formattedDate.getMonth()];
+  const dayOfMonth = formattedDate.getDate();
+
+  return `${dayOfWeek}, ${dayOfMonth} ${monthName} ${year}`;
+}

@@ -2,7 +2,6 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/Button";
 import Image from "next/image";
 import { airlineInfo } from "@/lib/airlineData";
 import {
@@ -13,6 +12,8 @@ import {
 } from "@/components/ui/tooltip";
 import { formatDurationString } from "@/lib/helpers";
 import { formatedFlight } from "./formatedFlight";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 type FlightOfferProps = {
   flight: any;
@@ -23,6 +24,17 @@ export default function FlightOffer({
   flight,
   dictionaries,
 }: FlightOfferProps) {
+  const searchParams = useSearchParams();
+
+  const {
+    departure: originLocationCode,
+    arrival: destinationLocationCode,
+    from: departureDate,
+    to: returnDate,
+    passengers: adults,
+    travelClass,
+  } = Object.fromEntries(searchParams.entries());
+
   //! THE OUTBOUND FLIGHT
   const outboundSegments = flight.itineraries[0].segments;
 
@@ -44,6 +56,25 @@ export default function FlightOffer({
   const returnAirline = airlineInfo.filter((airline) =>
     returnFlightInfo.IATA.includes(airline.id)
   );
+
+  //! FLIGHT OFFER ID IS IN THE OUTBOUND FLIGHT OBJECT
+  const flightOfferInfos = {
+    id: flight.id,
+    outbound: {
+      infos: outboundFlightInfo,
+      airlines: outboundAirline,
+      duration: outboundDuration,
+    },
+    return: {
+      infos: returnFlightInfo,
+      airlines: returnAirline,
+      duration: returnDuration,
+    },
+  };
+
+  function encodeData(data: any) {
+    return encodeURIComponent(JSON.stringify(data));
+  }
 
   return (
     <Card className="flex items-center justify-between py-4 px-5 shadow-none">
@@ -189,7 +220,17 @@ export default function FlightOffer({
       <div className="h-[200px] w-1 rounded bg-violet-400 border-2"></div>
       <div className="flex flex-col items-center justify-center gap-y-5 w-[25%]">
         <p>{flight.numberOfBookableSeats} Seats available</p>
-        <Button>See details</Button>
+        <Link
+          href={`/flights/${
+            flight.id
+          }/details?departure=${originLocationCode}&arrival=${destinationLocationCode}&from=${departureDate}&to=${returnDate}&passengers=${adults}&travelClass=${travelClass}&flightOfferInfos=${encodeData(
+            flightOfferInfos
+          )}&outboundSegments=${encodeData(outboundSegments)}`}
+          className="text-white bg-slate-900 px-3 py-2 rounded-md"
+        >
+          Show details
+        </Link>
+
         <p className="font-semibold">{flight.price.total} EUR</p>
       </div>
     </Card>
