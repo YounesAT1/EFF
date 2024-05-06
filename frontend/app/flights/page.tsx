@@ -71,7 +71,7 @@ export default function FlightsPage() {
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
-        setIsLoading(false); // Set isLoading back to false after fetching data
+        setIsLoading(false);
       }
     };
 

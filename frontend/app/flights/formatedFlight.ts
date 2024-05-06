@@ -69,12 +69,14 @@ export const formatedFlight = (
   const departureDate = new Date(segments[0].departure.at);
   const arrivalDate = new Date(segments[segments.length - 1].arrival.at);
 
+  // Calculate the difference in days between departure and arrival dates
   const differenceInDays = Math.ceil(
     (arrivalDate.getTime() - departureDate.getTime()) / (1000 * 60 * 60 * 24)
   );
 
   const plusDays = ["", "⁺¹", "⁺²", "⁺³"];
   if (differenceInDays > 0) {
+    // Add a little exponent to indicate the next day
     flightInfos.arrivalTime += plusDays[differenceInDays];
   }
 

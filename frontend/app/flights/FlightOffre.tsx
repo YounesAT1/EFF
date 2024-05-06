@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -44,13 +45,11 @@ export default function FlightOffer({
     returnFlightInfo.IATA.includes(airline.id)
   );
 
-  const plusDays = ["¹", "²", "³"];
-
   return (
     <Card className="flex items-center justify-between py-4 px-5 shadow-none">
       <div className="flex flex-col items-center w-full">
         <CardContent className="flex items-center  p-4 w-full">
-          <div className="flex items-center gap-x-5 w-[140px]">
+          <div className="flex items-center gap-x-5 w-[300px]">
             {outboundAirline.map((airline, index) => (
               <TooltipProvider key={index}>
                 <Tooltip>
@@ -62,8 +61,12 @@ export default function FlightOffer({
                       height={30}
                       priority
                       quality={90}
+                      className="rounded"
                     />
                   </TooltipTrigger>
+                  <p className="text-sm font-semibold text-slate-800 dark:text-white">
+                    {airline.name}
+                  </p>
                   <TooltipContent>
                     <p className="text-sm font-semibold">{airline.name}</p>
                   </TooltipContent>
@@ -72,7 +75,7 @@ export default function FlightOffer({
             ))}
           </div>
 
-          <div className="flex items-center justify-center gap-x-5 w-[63%] ms-14">
+          <div className="flex items-center justify-center gap-x-5 w-[63%] ms-[40px]">
             <div className="flex flex-col items-center justify-center">
               <p className="text-slate-600 text-lg dark:text-white">
                 {outboundFlightInfo.departureTime}
@@ -115,7 +118,7 @@ export default function FlightOffer({
         </CardContent>
 
         <CardContent className="flex   items-center p-4 w-full">
-          <div className="flex items-center gap-x-5 w-[140px]">
+          <div className="flex items-center gap-x-5 w-[300px]">
             {returnAirline.map((airline, index) => (
               <TooltipProvider key={index}>
                 <Tooltip>
@@ -127,8 +130,12 @@ export default function FlightOffer({
                       height={30}
                       priority
                       quality={90}
+                      className="rounded"
                     />
                   </TooltipTrigger>
+                  <p className="text-sm font-semibold text-slate-800 dark:text-white">
+                    {airline.name}
+                  </p>
                   <TooltipContent>
                     <p className="text-sm font-semibold">{airline.name}</p>
                   </TooltipContent>
@@ -137,7 +144,7 @@ export default function FlightOffer({
             ))}
           </div>
 
-          <div className="flex items-center justify-center gap-x-5 w-[63%] ms-14">
+          <div className="flex items-center justify-center gap-x-5 w-[63%] ms-[40px]">
             <div className="flex flex-col items-center justify-center">
               <p className="text-slate-600 text-lg dark:text-white">
                 {returnFlightInfo.departureTime}
@@ -180,7 +187,7 @@ export default function FlightOffer({
         </CardContent>
       </div>
       <div className="h-[200px] w-1 rounded bg-violet-400 border-2"></div>
-      <div className="flex flex-col items-center justify-center gap-y-5 w-[20%]">
+      <div className="flex flex-col items-center justify-center gap-y-5 w-[25%]">
         <p>{flight.numberOfBookableSeats} Seats available</p>
         <Button>See details</Button>
         <p className="font-semibold">{flight.price.total} EUR</p>
