@@ -32,11 +32,11 @@ export const formatDuration = (durationMs: number) => {
 };
 
 export const formatDurationString = (duration: string): string => {
-  const regex = /PT(\d+)H(\d+)M/;
+  const regex = /PT(?:(\d+)H)?(?:(\d+)M)?/;
   const match = duration.match(regex);
   if (match) {
-    const hours = parseInt(match[1]);
-    const minutes = parseInt(match[2]);
+    const hours = match[1] ? parseInt(match[1]) : "00";
+    const minutes = match[2] ? parseInt(match[2]) : "00";
     return `${hours}h ${minutes}m`;
   }
   return "";
@@ -65,4 +65,18 @@ export function formatDate(dateString: any) {
   const dayOfMonth = formattedDate.getDate();
 
   return `${dayOfWeek}, ${dayOfMonth} ${monthName} ${year}`;
+}
+
+export function formatSegemntDuration(duration: any) {
+  const hours = Math.floor(duration / (1000 * 60 * 60));
+  const minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
+  return `${hours} h ${minutes} m`;
+}
+
+export function encodeData(data: any) {
+  return encodeURIComponent(JSON.stringify(data));
+}
+
+export function decodeData(dataString: any) {
+  return JSON.parse(decodeURIComponent(dataString));
 }

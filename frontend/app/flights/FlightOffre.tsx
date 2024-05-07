@@ -10,7 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { formatDurationString } from "@/lib/helpers";
+import { encodeData, formatDurationString } from "@/lib/helpers";
 import { formatedFlight } from "./formatedFlight";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -71,10 +71,6 @@ export default function FlightOffer({
       duration: returnDuration,
     },
   };
-
-  function encodeData(data: any) {
-    return encodeURIComponent(JSON.stringify(data));
-  }
 
   return (
     <Card className="flex items-center justify-between py-4 px-5 shadow-none">
@@ -225,7 +221,9 @@ export default function FlightOffer({
             flight.id
           }/details?departure=${originLocationCode}&arrival=${destinationLocationCode}&from=${departureDate}&to=${returnDate}&passengers=${adults}&travelClass=${travelClass}&flightOfferInfos=${encodeData(
             flightOfferInfos
-          )}&outboundSegments=${encodeData(outboundSegments)}`}
+          )}&outboundSegments=${encodeData(
+            outboundSegments
+          )}&returnSegments=${encodeData(returnSegments)}`}
           className="text-white bg-slate-900 px-3 py-2 rounded-md"
         >
           Show details

@@ -34650,7 +34650,7 @@ export const airports = [
     lon: "29.309189",
     iso: "TR",
     status: 1,
-    name: null,
+    name: "Sabiha Gökçen International Airport",
     continent: "AS",
     type: "airport",
     lat: "40.904675",

@@ -75,9 +75,20 @@ export const formatedFlight = (
     (arrivalDate.getTime() - departureDate.getTime()) / (1000 * 60 * 60 * 24)
   );
 
-  const superscriptDigits = [" ", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"];
+  const superscriptDigits = [
+    " ",
+    "⁺¹",
+    "⁺²",
+    "⁺³",
+    "⁺⁴",
+    "⁺⁵",
+    "⁺⁶",
+    "⁺⁷",
+    "⁺⁸",
+    "⁺⁹",
+  ];
   if (differenceInDays > 0 && differenceInDays <= 3) {
-    flightInfos.arrivalTime += "⁺" + superscriptDigits[differenceInDays];
+    flightInfos.arrivalTime += "" + superscriptDigits[differenceInDays - 1];
   }
 
   return flightInfos;
