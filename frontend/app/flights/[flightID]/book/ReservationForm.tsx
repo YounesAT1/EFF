@@ -8,10 +8,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 const FormDataSchema = z.object({
+  title: z.string(),
+  Gender: z.string(),
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   email: z.string().min(1, "Email is required").email("Invalid email address"),
+  DateOfBirth: z.date(),
+  PhoneNumber: z.string().min(1, "Phone number is required"),
+  PassportNumber: z.string().min(1, "Passport number is required"),
   country: z.string().min(1, "Country is required"),
+  ExpirationDate: z.date(),
+  Nationality: z.string().min(1, "Nationality is required"),
   street: z.string().min(1, "Street is required"),
   city: z.string().min(1, "City is required"),
   state: z.string().min(1, "State is required"),
@@ -24,14 +31,25 @@ const steps = [
   {
     id: "Step 1",
     name: "Personal Information",
-    fields: ["firstName", "lastName", "email"],
+    fields: [
+      "title",
+      "firstName",
+      "lastName",
+      "Gender",
+      "email",
+      "Date of birth",
+      "Phone number",
+      "Passport number",
+      "Expiration date",
+      "Nationality",
+    ],
   },
   {
     id: "Step 2",
-    name: "Address",
+    name: "Payment",
     fields: ["country", "state", "city", "street", "zip"],
   },
-  { id: "Step 3", name: "Complete" },
+  { id: "Step 3", name: "Overview" },
 ];
 
 export default function ReservationForm() {
@@ -87,28 +105,25 @@ export default function ReservationForm() {
           {steps.map((step, index) => (
             <li key={step.name} className="md:flex-1">
               {currentStep > index ? (
-                <div className="group flex w-full flex-col border-l-4 border-sky-600 py-2 pl-4 transition-colors md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4">
-                  <span className="text-sm font-medium text-sky-600 transition-colors ">
-                    {step.id}
+                <div className="group flex w-full flex-col border-l-4 border-violet-600 py-2 pl-4 transition-colors md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4">
+                  <span className="text-sm font-semibold text-violet-600 transition-colors ">
+                    {step.name}
                   </span>
-                  <span className="text-sm font-medium">{step.name}</span>
                 </div>
               ) : currentStep === index ? (
                 <div
-                  className="flex w-full flex-col border-l-4 border-sky-600 py-2 pl-4 md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4"
+                  className="flex w-full flex-col border-l-4 border-violet-600 py-2 pl-4 md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4"
                   aria-current="step"
                 >
-                  <span className="text-sm font-medium text-sky-600">
-                    {step.id}
+                  <span className="text-sm font-semibold text-violet-600">
+                    {step.name}
                   </span>
-                  <span className="text-sm font-medium">{step.name}</span>
                 </div>
               ) : (
                 <div className="group flex w-full flex-col border-l-4 border-gray-200 py-2 pl-4 transition-colors md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4">
-                  <span className="text-sm font-medium text-gray-500 transition-colors">
-                    {step.id}
+                  <span className="text-sm font-semibold text-gray-500 transition-colors">
+                    {step.name}
                   </span>
-                  <span className="text-sm font-medium">{step.name}</span>
                 </div>
               )}
             </li>
@@ -124,13 +139,37 @@ export default function ReservationForm() {
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
           >
-            <h2 className="text-base font-semibold leading-7 text-gray-900">
-              Personal Information
-            </h2>
-            <p className="mt-1 text-sm leading-6 text-gray-600">
+            <p className="mt-1 text-sm leading-6 text-slate-800 font-semibold">
               Provide your personal details.
             </p>
-            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
+              <div className="sm:col-span-2">
+                <label
+                  htmlFor="title"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Title
+                </label>
+                <div className="mt-2">
+                  <select
+                    id="title"
+                    {...register("title")}
+                    autoComplete="title"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+                  >
+                    <option value="Mr.">Mr.</option>
+                    <option value="Mrs.">Mrs.</option>
+                    <option value="Ms.">Ms.</option>
+                    <option value="Dr.">Dr.</option>
+                  </select>
+                  {errors.title?.message && (
+                    <p className="mt-2 text-sm text-red-400">
+                      {errors.title.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
               <div className="sm:col-span-3">
                 <label
                   htmlFor="firstName"
@@ -177,7 +216,7 @@ export default function ReservationForm() {
                 </div>
               </div>
 
-              <div className="sm:col-span-4">
+              <div className="sm:col-span-3">
                 <label
                   htmlFor="email"
                   className="block text-sm font-medium leading-6 text-gray-900"
