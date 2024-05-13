@@ -28,17 +28,24 @@ export const BookingFormSchema = z.object({
       message: "You must be at least 18 years old",
     }
   ),
-  phoneNumber: z
-    .string()
-    .min(1, "Phone number is required")
-    .refine((phoneNumber) => /^\+\d{1,3}\d{6,14}$/.test(phoneNumber), {
-      message:
-        "Invalid phone number format. It should start with a '+' followed by country code and numbers.",
-    }),
+  phoneNumber: z.string(),
   passportNumber: z.string().min(1, "Passport number is required"),
   passportExpirationDate: z
     .date()
     .refine((expirationDate) => expirationDate > new Date(), {
       message: "Expiration date must be in the future",
     }),
+  cardHolderFirstName: z.string().min(1, "First Name is required"),
+  cardHolderLastName: z.string().min(1, "Last Name is required"),
+  cardNumber: z
+    .string()
+    .min(1, "Card number is required")
+    .regex(/^\d{16}$/, "Card number must be 16 digits"),
+  cardExperationDate: z
+    .date()
+    .min(new Date(), "Card expiration date must be in the future"),
+  cardCVV: z
+    .string()
+    .min(3, "CVV must be at least 3 characters")
+    .max(4, "CVV must be at most 4 characters"),
 });

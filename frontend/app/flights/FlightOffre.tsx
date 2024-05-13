@@ -60,6 +60,9 @@ export default function FlightOffer({
   //! FLIGHT OFFER ID IS IN THE OUTBOUND FLIGHT OBJECT
   const flightOfferInfos = {
     id: flight.id,
+    departureDate: departureDate,
+    arrivalDate: returnDate,
+    totalPrice: flight.price.total,
     outbound: {
       infos: outboundFlightInfo,
       airlines: outboundAirline,

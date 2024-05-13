@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { Circle, Plane } from "lucide-react";
 import {
   decodeData,
+  encodeData,
   formatDate,
   formatDurationString,
   formatSegemntDuration,
@@ -407,9 +408,17 @@ function FlightDetails() {
           </CardContent>
         </Card>
       </div>
-      <div className="mt-16 flex justify-end">
+      <div className="mt-16 flex items-center justify-between">
+        <div className="font-bold text-lg text-slate-800 border-violet-500 border-2 p-3 rounded">
+          <p className="text-slate-700 ">
+            Total price : <span>{flightOfferInfos.totalPrice} EUR</span>
+          </p>
+        </div>
+
         <Link
-          href={`/flights/${flightOfferInfos.id}/book`}
+          href={`/flights/${flightOfferInfos.id}/book?flight=${encodeData(
+            flightOfferInfos
+          )}`}
           className="font-semibold w-36 text-white bg-slate-800 px-4 py-2 text-center rounded-md"
         >
           Book now

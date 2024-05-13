@@ -80,3 +80,73 @@ export function encodeData(data: any) {
 export function decodeData(dataString: any) {
   return JSON.parse(decodeURIComponent(dataString));
 }
+
+export const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+export const getCardType = (partialCardNumber: any) => {
+  if (!partialCardNumber || typeof partialCardNumber !== "string") {
+    return null;
+  }
+
+  const visaPrefixes = ["4"];
+  const mastercardPrefixes = ["51", "52", "53", "54", "55"];
+
+  const sanitizedCardNumber = partialCardNumber.replace(/\s/g, "");
+  const firstDigits = sanitizedCardNumber.slice(0, 2);
+
+  if (visaPrefixes.includes(firstDigits)) {
+    return "visa";
+  } else if (mastercardPrefixes.includes(firstDigits)) {
+    return "masterCard";
+  } else {
+    return null;
+  }
+};
+
+export const steps = [
+  {
+    id: "Step one",
+    name: "Personal information",
+    fields: [
+      "email",
+      "gender",
+      "title",
+      "firstName",
+      "lastName",
+      "nationality",
+      "dateOfBirth",
+      "phoneNumber",
+      "passportNumber",
+      "passportExpirationDate",
+    ],
+  },
+  {
+    id: "Step two",
+    name: "Payment details",
+    fields: [
+      "cardHolderFirstName",
+      "cardHolderLastName",
+      "cardNumber",
+      "cardExperationDate",
+      "cardCVV",
+    ],
+  },
+  {
+    id: "Step three",
+    name: "Over view",
+    fields: [],
+  },
+];
