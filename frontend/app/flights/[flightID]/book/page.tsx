@@ -2,7 +2,7 @@ import Header from "@/components/Header";
 import React from "react";
 import FlightSamary from "./FlightSamary";
 import { Footer } from "@/components/Footer";
-import BookingForm from "./BookingForm";
+import BookingForm from "./BookingForm.1";
 
 export default function page() {
   return (

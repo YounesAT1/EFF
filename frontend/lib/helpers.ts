@@ -118,6 +118,7 @@ export const getCardType = (partialCardNumber: any) => {
 
 export const steps = [
   {
+    index: 0,
     id: "Step one",
     name: "Personal information",
     fields: [
@@ -134,6 +135,7 @@ export const steps = [
     ],
   },
   {
+    index: 1,
     id: "Step two",
     name: "Payment details",
     fields: [
@@ -144,9 +146,5 @@ export const steps = [
       "cardCVV",
     ],
   },
-  {
-    id: "Step three",
-    name: "Over view",
-    fields: [],
-  },
+  { index: 2, id: "Step three", name: "Over view", fields: [] },
 ];

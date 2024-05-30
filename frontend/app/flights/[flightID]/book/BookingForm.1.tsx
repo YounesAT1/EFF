@@ -1,5 +1,4 @@
 "use client";
-
 import CountrySelect, { CountrySelectValue } from "@/components/CountrySelect";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
@@ -30,7 +29,7 @@ import {
 import { BookingFormSchema } from "@/lib/schmas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BadgeCheck, CalendarIcon, Plane } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as z from "zod";
 import { format } from "date-fns";
@@ -92,12 +91,11 @@ export default function BookingForm() {
   };
 
   const next = async () => {
-    const fields = steps[currentStep].fields;
-    const output = await form.trigger(fields as FieldName[], {
-      shouldFocus: true,
-    });
-    if (!output) return;
-
+    // const fields = steps[currentStep].fields;
+    // const output = await form.trigger(fields as FieldName[], {
+    //   shouldFocus: true,
+    // });
+    // if (!output) return;
     if (currentStep < steps.length - 1) {
       // if (currentStep === steps.length - 2) {
       //   await form.handleSubmit(processForm)();
@@ -838,7 +836,7 @@ export default function BookingForm() {
             <Button
               disabled={currentStep === 0}
               onClick={prev}
-              className={currentStep === steps.length - 1 ? "hidden" : "block"}
+              className={currentStep === steps.length - 2 ? "hidden" : "block"}
             >
               Previous
             </Button>
@@ -846,21 +844,21 @@ export default function BookingForm() {
               <Button
                 onClick={next}
                 className={
-                  currentStep === steps.length - 1 ? "hidden" : "block"
+                  currentStep === steps.length - 2 ? "hidden" : "block"
                 }
               >
                 Next
               </Button>
             )}
 
-            {/* {currentStep === steps.length - 1 && (
+            {currentStep === steps.length - 2 && (
               <Link
                 href="/"
                 className="block w-full text-center py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded"
               >
                 Back to home page
               </Link>
-            )} */}
+            )}
           </div>
         </form>
       </Form>
