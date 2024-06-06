@@ -843,14 +843,7 @@ export default function BookingForm() {
               Previous
             </Button>
             {currentStep !== steps.length - 1 && (
-              <Button
-                onClick={next}
-                className={
-                  currentStep === steps.length - 1 ? "hidden" : "block"
-                }
-              >
-                Next
-              </Button>
+              <Button onClick={next}>Next</Button>
             )}
 
             {/* {currentStep === steps.length - 1 && (

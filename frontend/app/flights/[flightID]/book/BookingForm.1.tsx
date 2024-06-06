@@ -726,39 +726,38 @@ export default function BookingForm() {
                               </Select>
                             </FormControl>
                             {/* Select for days */}
-                            <FormControl className="w-1/2">
+                            <FormControl className="w-1/3">
                               <Select
-                                onValueChange={(day) =>
+                                onValueChange={(year) =>
                                   field.onChange(
                                     new Date(
-                                      field.value
-                                        ? field.value.getFullYear()
-                                        : new Date().getFullYear(),
+                                      //@ts-ignore
+                                      year,
                                       field.value ? field.value.getMonth() : 0,
-                                      parseInt(day)
+                                      field.value ? field.value.getDate() : 1
                                     )
                                   )
                                 }
                                 value={
                                   field.value
-                                    ? field.value.getDate().toString()
+                                    ? field.value.getFullYear().toString()
                                     : ""
                                 }
                               >
                                 <SelectTrigger className="shadow-none border-gray-200">
-                                  <SelectValue placeholder="Day" />
+                                  <SelectValue placeholder="Year" />
                                 </SelectTrigger>
                                 <SelectContent>
                                   <SelectGroup>
                                     {Array.from(
-                                      { length: 31 },
-                                      (_, i) => i + 1
-                                    ).map((day) => (
+                                      { length: 100 },
+                                      (_, i) => new Date().getFullYear() - i
+                                    ).map((year) => (
                                       <SelectItem
-                                        key={day}
-                                        value={day.toString()}
+                                        key={year}
+                                        value={year.toString()}
                                       >
-                                        {day}
+                                        {year}
                                       </SelectItem>
                                     ))}
                                   </SelectGroup>
@@ -795,7 +794,7 @@ export default function BookingForm() {
                   </div>
                 </div>
                 <div className="w-full">
-                  <p className="text-xl font-semibold text-slate-600 leading-3">
+                  <p className="text-xl font-semibold text-slate-600 leading-3 dark:text-white">
                     Total : {flightOfferInfos.totalPrice} EUR
                   </p>
                 </div>
@@ -804,31 +803,39 @@ export default function BookingForm() {
           )}
 
           {currentStep === 2 && (
-            <div className="flex flex-col  items-center justify-center gap-5 h-[400px]">
-              <div className="flex items-center gap-x-1">
-                <BadgeCheck className="text-green-500 w-10 h-10   " />
-                <h1 className="text-3xl font-bold text-slate-800">
-                  You have{" "}
-                  <span className="bg-green-500 p-2 rounded-md text-white">
-                    successfully booked
-                  </span>{" "}
-                  your flight
-                </h1>
-                <BadgeCheck className="text-green-500   w-10 h-10 " />{" "}
+            <div className="flex flex-col justify-between h-[400px]">
+              <div className="flex flex-col items-center justify-center gap-5 h-full">
+                <div className="flex items-center gap-x-1">
+                  <BadgeCheck className="text-green-500 w-10 h-10" />
+                  <h1 className="text-3xl font-bold text-slate-800">
+                    You have{" "}
+                    <span className="bg-green-500 p-2 rounded-md text-white">
+                      successfully booked
+                    </span>{" "}
+                    your flight
+                  </h1>
+                  <BadgeCheck className="text-green-500 w-10 h-10" />
+                </div>
+                <p className="text-[20px] font-semibold text-slate-600">
+                  Please check your email inbox for the flight ticket details
+                </p>
+                <p className="text-[20px] font-semibold text-slate-500 flex items-center gap-x-2">
+                  <Plane className="bg-rose-500 text-white rounded-full py-2 w-12 h-12" />
+                  <span className="bg-sky-500 text-white font-extrabold px-3 py-2 rounded">
+                    Enjoy your time
+                  </span>
+                  <span className="bg-rose-500 text-white font-extrabold px-3 py-2 rounded">
+                    Make endless memories
+                  </span>
+                  <Plane className="bg-sky-500 text-white rounded-full py-2 w-12 h-12" />
+                </p>
               </div>
-              <p className="text-[20px] font-semibold text-slate-600">
-                Please check your email inbox for the flight ticket details
-              </p>
-              <p className="text-[20px] font-semibold text-slate-500 flex items-center gap-x-2">
-                <Plane className="bg-rose-500 text-white rounded-full py-2 w-12 h-12" />
-                <span className="bg-sky-500 text-white font-extrabold px-3 py-2 rounded">
-                  Enjoy your time
-                </span>{" "}
-                <span className="bg-rose-500 text-white font-extrabold px-3 py-2 rounded">
-                  Make endless momories
-                </span>
-                <Plane className="bg-sky-500 text-white rounded-full py-2 w-12 h-12" />
-              </p>
+              <Link
+                href="/"
+                className="block w-full text-center py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded mt-auto"
+              >
+                Back to home page
+              </Link>
             </div>
           )}
 
@@ -836,7 +843,7 @@ export default function BookingForm() {
             <Button
               disabled={currentStep === 0}
               onClick={prev}
-              className={currentStep === steps.length - 2 ? "hidden" : "block"}
+              className={currentStep === steps.length - 1 ? "hidden" : "block"}
             >
               Previous
             </Button>
@@ -844,20 +851,11 @@ export default function BookingForm() {
               <Button
                 onClick={next}
                 className={
-                  currentStep === steps.length - 2 ? "hidden" : "block"
+                  currentStep === steps.length - 1 ? "hidden" : "block"
                 }
               >
                 Next
               </Button>
-            )}
-
-            {currentStep === steps.length - 2 && (
-              <Link
-                href="/"
-                className="block w-full text-center py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded"
-              >
-                Back to home page
-              </Link>
             )}
           </div>
         </form>

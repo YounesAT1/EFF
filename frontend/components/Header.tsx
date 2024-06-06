@@ -1,18 +1,18 @@
 "use client";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useTheme } from "next-themes";
-import { useEffect } from "react";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-
 import Container from "./ui/Container";
 import { Button } from "./ui/Button";
-import Copyright from "./CopyRight";
-
 import { Sun, Moon, Menu, User } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
-import Image from "next/image";
-import { ProfileButton } from "./ui/ProfileButton";
 import useAuthContext from "@/context/AuthContext";
+import Loader from "./ui/Loader";
+import { ProfileButton } from "./ui/ProfileButton";
+import Copyright from "./CopyRight";
+import { useTheme } from "next-themes";
+import { axiosClient } from "@/api/axios";
 
 const routes = [
   {
@@ -32,12 +32,22 @@ const routes = [
 const Header = () => {
   const pathName = usePathname();
   const { theme, setTheme } = useTheme();
-
   const { user, getUser } = useAuthContext();
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
-    if (!user) {
-      getUser();
-    }
+    setIsLoading(true);
+    const fetchData = async () => {
+      try {
+        await getUser();
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, [getUser, user]);
 
   return (
@@ -72,8 +82,8 @@ const Header = () => {
             ))}
           </nav>
 
-          <div className="flex items-center ">
-            {!user && (
+          <div className="flex items-center">
+            {!user && !isLoading && (
               <Link href="sign-up" className="hidden md:block">
                 <Button
                   className="flex items-center justify-between gap-2 mr-6 "
@@ -84,11 +94,14 @@ const Header = () => {
                 </Button>
               </Link>
             )}
-            {user && (
-              <div className="hidden md:block mx-3">
-                <ProfileButton user={user} />
+
+            {!user && isLoading && (
+              <div className="mr-1">
+                <Loader />
               </div>
             )}
+
+            {user && <ProfileButton user={user} />}
 
             <Button
               variant="ghost"

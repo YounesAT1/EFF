@@ -12,6 +12,8 @@ type AuthProviderProps = {
 };
 
 type User = {
+  id: string;
+  picture: string;
   firstName?: string;
   lastName?: string;
   email?: string;
