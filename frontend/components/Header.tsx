@@ -48,7 +48,8 @@ const Header = () => {
     };
 
     fetchData();
-  }, [getUser, user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <header className="mx-auto max-w-7xl sm:flex sm:justify-between p-4 sticky top-0 bg-white bg-opacity-80 backdrop-blur-md z-10 rounded-b-md dark:bg-gray-800 dark:bg-opacity-80">

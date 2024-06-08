@@ -32,13 +32,20 @@ import { BadgeCheck, CalendarIcon, Plane } from "lucide-react";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as z from "zod";
-import { format } from "date-fns";
 import PhoneSelect, { PhoneSelectValue } from "@/components/phoneCodes";
 import { motion } from "framer-motion";
-import { decodeData, getCardType, months, steps } from "@/lib/helpers";
+import {
+  decodeData,
+  formatCardNumber,
+  formatFormDate,
+  getCardType,
+  months,
+  steps,
+} from "@/lib/helpers";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
+import { sendEmail } from "@/email/sendEmail";
+import Loader from "@/components/ui/Loader";
 
 export default function BookingForm() {
   const params = useSearchParams();
@@ -49,6 +56,7 @@ export default function BookingForm() {
   const [previousStep, setPreviousStep] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
   const [phoneCode, setPhoneCode] = useState<PhoneSelectValue>();
+  const [sendingEmail, setSendingEamil] = useState(false);
 
   const delta = currentStep - previousStep;
 
@@ -73,6 +81,34 @@ export default function BookingForm() {
     },
   });
 
+  type Inputs = z.infer<typeof BookingFormSchema>;
+  type FieldName = keyof Inputs;
+  const processForm: SubmitHandler<z.infer<typeof BookingFormSchema>> = async (
+    data
+  ) => {
+    const formattedData = {
+      ...data,
+      nationality: data.nationality.label,
+      dateOfBirth: formatFormDate(data.dateOfBirth),
+      passportExpirationDate: formatFormDate(data.passportExpirationDate),
+      cardExperationDate: formatFormDate(data.cardExperationDate),
+      cardNumber: formatCardNumber(data.cardNumber),
+    };
+
+    try {
+      setSendingEamil(true);
+      await sendEmail(formattedData, flightOfferInfos);
+      console.log("Email sent and form submitted successfully");
+    } catch (error) {
+      console.error("Error sending email:", error);
+    } finally {
+      setSendingEamil(false);
+    }
+
+    console.log(formattedData);
+    form.reset();
+  };
+
   const prev = () => {
     if (currentStep > 0) {
       setPreviousStep(currentStep);
@@ -80,26 +116,16 @@ export default function BookingForm() {
     }
   };
 
-  type Inputs = z.infer<typeof BookingFormSchema>;
-  type FieldName = keyof Inputs;
-
-  const processForm: SubmitHandler<Inputs> = (
-    data: z.infer<typeof BookingFormSchema>
-  ) => {
-    console.log(data);
-    form.reset();
-  };
-
   const next = async () => {
-    // const fields = steps[currentStep].fields;
-    // const output = await form.trigger(fields as FieldName[], {
-    //   shouldFocus: true,
-    // });
-    // if (!output) return;
+    const fields = steps[currentStep].fields;
+    const output = await form.trigger(fields as FieldName[], {
+      shouldFocus: true,
+    });
+    if (!output) return;
     if (currentStep < steps.length - 1) {
-      // if (currentStep === steps.length - 2) {
-      //   await form.handleSubmit(processForm)();
-      // }
+      if (currentStep === steps.length - 2) {
+        await form.handleSubmit(processForm)();
+      }
       setPreviousStep(currentStep);
       setCurrentStep((step) => step + 1);
     }
@@ -516,36 +542,121 @@ export default function BookingForm() {
                         <FormLabel className="text-gray-700 font-semibold">
                           Passport experation date
                         </FormLabel>
-                        <Popover>
-                          <PopoverTrigger asChild className="w-full">
-                            <FormControl>
-                              <Button
-                                variant={"outline"}
-                                className={cn(
-                                  "w-full pl-3 text-left font-normal shadow-none border-gray-200 hover:border-[#8B5CF6] focus:border-[#8B5CF6] cursor-pointer",
-                                  !field.value && "text-muted-foreground"
-                                )}
-                              >
-                                {field.value ? (
-                                  format(field.value, "PPP")
-                                ) : (
-                                  <span>Pick a date</span>
-                                )}
-                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={field.onChange}
-                              disabled={(date) => date < new Date()}
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
-
+                        <div className="flex gap-2">
+                          {/* Select for years */}
+                          <FormControl className="w-1/3">
+                            <Select
+                              onValueChange={(year) =>
+                                field.onChange(
+                                  new Date(
+                                    //@ts-ignore
+                                    year,
+                                    field.value ? field.value.getMonth() : 0,
+                                    field.value ? field.value.getDate() : 1
+                                  )
+                                )
+                              }
+                              value={
+                                field.value
+                                  ? field.value.getFullYear().toString()
+                                  : ""
+                              }
+                            >
+                              <SelectTrigger className="shadow-none border-gray-200">
+                                <SelectValue placeholder="Year" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectGroup>
+                                  {Array.from(
+                                    { length: 10 },
+                                    (_, i) => new Date().getFullYear() + i
+                                  ).map((year) => (
+                                    <SelectItem
+                                      key={year}
+                                      value={year.toString()}
+                                    >
+                                      {year}
+                                    </SelectItem>
+                                  ))}
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                          {/* Select for months */}
+                          <FormControl className="w-1/3">
+                            <Select
+                              onValueChange={(month) =>
+                                field.onChange(
+                                  new Date(
+                                    field.value
+                                      ? field.value.getFullYear()
+                                      : new Date().getFullYear(),
+                                    months.indexOf(month),
+                                    field.value ? field.value.getDate() : 1
+                                  )
+                                )
+                              }
+                              value={
+                                field.value
+                                  ? months[field.value.getMonth()]
+                                  : ""
+                              }
+                            >
+                              <SelectTrigger className="shadow-none border-gray-200">
+                                <SelectValue placeholder="Month" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectGroup>
+                                  {months.map((month: string) => (
+                                    <SelectItem key={month} value={month}>
+                                      {month}
+                                    </SelectItem>
+                                  ))}
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                          {/* Select for days */}
+                          <FormControl className="w-1/3">
+                            <Select
+                              onValueChange={(day) =>
+                                field.onChange(
+                                  new Date(
+                                    field.value
+                                      ? field.value.getFullYear()
+                                      : new Date().getFullYear(),
+                                    field.value ? field.value.getMonth() : 0,
+                                    parseInt(day)
+                                  )
+                                )
+                              }
+                              value={
+                                field.value
+                                  ? field.value.getDate().toString()
+                                  : ""
+                              }
+                            >
+                              <SelectTrigger className="shadow-none border-gray-200">
+                                <SelectValue placeholder="Day" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectGroup>
+                                  {Array.from(
+                                    { length: 31 },
+                                    (_, i) => i + 1
+                                  ).map((day) => (
+                                    <SelectItem
+                                      key={day}
+                                      value={day.toString()}
+                                    >
+                                      {day}
+                                    </SelectItem>
+                                  ))}
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                        </div>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -599,8 +710,6 @@ export default function BookingForm() {
                               type="text"
                             />
                           </FormControl>
-
-                          <FormMessage className="dark:text-red-700" />
                         </FormItem>
                       )}
                     />
@@ -624,7 +733,6 @@ export default function BookingForm() {
                               type="text"
                             />
                           </FormControl>
-                          <FormMessage className="dark:text-red-700" />
                         </FormItem>
                       )}
                     />
@@ -648,7 +756,14 @@ export default function BookingForm() {
                               name="cardNumber"
                               id="cardNumber"
                               type="text"
-                              max={16}
+                              value={formatCardNumber(field.value)}
+                              onChange={(e) => {
+                                const formattedValue = formatCardNumber(
+                                  e.target.value
+                                );
+                                field.onChange(formattedValue);
+                              }}
+                              maxLength={19}
                             />
                           </FormControl>
                         </FormItem>
@@ -750,8 +865,8 @@ export default function BookingForm() {
                                 <SelectContent>
                                   <SelectGroup>
                                     {Array.from(
-                                      { length: 100 },
-                                      (_, i) => new Date().getFullYear() - i
+                                      { length: 10 },
+                                      (_, i) => new Date().getFullYear() + i
                                     ).map((year) => (
                                       <SelectItem
                                         key={year}
@@ -765,7 +880,6 @@ export default function BookingForm() {
                               </Select>
                             </FormControl>
                           </div>
-                          <FormMessage />
                         </FormItem>
                       )}
                     />
@@ -785,9 +899,10 @@ export default function BookingForm() {
                               id="cardCVV"
                               name="cardCVV"
                               type="text"
+                              min={3}
+                              max={4}
                             />
                           </FormControl>
-                          <FormMessage className="dark:text-red-700" />
                         </FormItem>
                       )}
                     />
@@ -816,9 +931,7 @@ export default function BookingForm() {
                   </h1>
                   <BadgeCheck className="text-green-500 w-10 h-10" />
                 </div>
-                <p className="text-[20px] font-semibold text-slate-600">
-                  Please check your email inbox for the flight ticket details
-                </p>
+
                 <p className="text-[20px] font-semibold text-slate-500 flex items-center gap-x-2">
                   <Plane className="bg-rose-500 text-white rounded-full py-2 w-12 h-12" />
                   <span className="bg-sky-500 text-white font-extrabold px-3 py-2 rounded">
@@ -830,12 +943,9 @@ export default function BookingForm() {
                   <Plane className="bg-sky-500 text-white rounded-full py-2 w-12 h-12" />
                 </p>
               </div>
-              <Link
-                href="/"
-                className="block w-full text-center py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded mt-auto"
-              >
-                Back to home page
-              </Link>
+              <Button className=" w-full text-center py-7 bg-indigo-500 hover:bg-indigo-600 text-white rounded  text-3xl">
+                Check your email inbox for the flight ticket invoice
+              </Button>
             </div>
           )}
 
@@ -854,7 +964,13 @@ export default function BookingForm() {
                   currentStep === steps.length - 1 ? "hidden" : "block"
                 }
               >
-                Next
+                {sendingEmail ? (
+                  <Loader />
+                ) : currentStep === steps.length - 2 ? (
+                  "Book"
+                ) : (
+                  "Next"
+                )}
               </Button>
             )}
           </div>

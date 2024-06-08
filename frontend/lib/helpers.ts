@@ -148,3 +148,22 @@ export const steps = [
   },
   { index: 2, id: "Step three", name: "Over view", fields: [] },
 ];
+
+export const formatCardNumber = (value: any) => {
+  return (
+    value
+      .replace(/\D/g, "")
+      .match(/.{1,4}/g)
+      ?.join("-")
+      .slice(0, 19) || ""
+  );
+};
+
+export const formatFormDate = (date: any) => {
+  if (date instanceof Date) {
+    return date.toISOString().split("T")[0];
+  } else if (typeof date === "string") {
+    return date.split("T")[0];
+  }
+  return date;
+};

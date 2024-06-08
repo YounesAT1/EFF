@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 export const BookingFormSchema = z.object({
-  email: z.string().email().min(1, "Email is required").readonly(),
+  email: z.string().email().min(1, "Email is required"),
   gender: z
     .string()
     .min(1, "Gender is required")
@@ -14,9 +14,14 @@ export const BookingFormSchema = z.object({
     .refine((title) => ["Ms", "Mr", "Mrs"].includes(title), {
       message: "Title should be 'Ms', 'Mr', or 'Mrs'",
     }),
-  firstName: z.string().min(1, "First name is required").readonly(),
-  lastName: z.string().min(1, "Last name is required").readonly(),
-  nationality: z.any(),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  nationality: z.object({
+    value: z.string(),
+    label: z.string(),
+    flag: z.string(),
+    region: z.string(),
+  }),
   dateOfBirth: z.date().refine(
     (dateOfBirth) => {
       const today = new Date();
@@ -40,7 +45,10 @@ export const BookingFormSchema = z.object({
   cardNumber: z
     .string()
     .min(1, "Card number is required")
-    .regex(/^\d{16}$/, "Card number must be 16 digits"),
+    .regex(
+      /^(\d{4}-){3}\d{4}$/,
+      "Card number must be in the format 1234-5678-9012-3456"
+    ),
   cardExperationDate: z
     .date()
     .min(new Date(), "Card expiration date must be in the future"),

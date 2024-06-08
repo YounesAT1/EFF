@@ -14,6 +14,7 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { axiosClient } from "@/api/axios";
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 
 const Details = () => {
   const router = useRouter();
@@ -49,8 +50,7 @@ const Details = () => {
         passwordConfirmation: "",
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -79,9 +79,9 @@ const Details = () => {
       });
 
       if (res.status === 200) {
-        setIsLoading(false);
         toast.success(res.data.message);
         router.push("/");
+        setIsLoading(false);
       } else {
         toast.error("Something went wrong");
         setIsLoading(false);
@@ -107,6 +107,11 @@ const Details = () => {
     }
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+  const handleTogglePassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+
   if (!user) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -123,11 +128,19 @@ const Details = () => {
   return (
     <div className="max-w-7xl mx-auto p-3 flex flex-col gap-y-8">
       <h1 className="text-3xl text-slate-600 font-semibold text-center mt-12">
-        Hello{" "}
-        <span className="bg-violet-500 px-3 py-2 text-white rounded-md">
+        <span className="bg-sky-400 px-3 py-2 text-white rounded-md">
+          Hello
+        </span>{" "}
+        <span className="bg-violet-400 px-3 py-2 text-white rounded-md">
           {user?.firstName}
         </span>{" "}
-        Welcome to your personal space.
+        <span className="bg-rose-400 px-3 py-2 text-white rounded-md">
+          {" "}
+          Welcome to your
+        </span>{" "}
+        <span className="bg-green-400 px-3 py-2 text-white rounded-md">
+          personal space .
+        </span>
       </h1>
       <div>
         <form
@@ -149,7 +162,9 @@ const Details = () => {
                 className="shadow-none w-[500px]"
               />
               {errors.firstName && (
-                <p className="text-red-500">{errors.firstName}</p>
+                <p className="text-red-500 tex-sm font-semibold mt-2">
+                  {errors.firstName}
+                </p>
               )}
             </div>
             <div>
@@ -163,7 +178,9 @@ const Details = () => {
                 className="shadow-none w-[500px]"
               />
               {errors.lastName && (
-                <p className="text-red-500">{errors.lastName}</p>
+                <p className="text-red-500 tex-sm font-semibold mt-2">
+                  {errors.lastName}
+                </p>
               )}
             </div>
             <div>
@@ -176,12 +193,16 @@ const Details = () => {
                 onChange={handleInputChange}
                 className="shadow-none w-[500px]"
               />
-              {errors.email && <p className="text-red-500">{errors.email}</p>}
+              {errors.email && (
+                <p className="text-red-500 tex-sm font-semibold mt-2">
+                  {errors.email}
+                </p>
+              )}
             </div>
-            <div>
+            <div className="relative">
               <label htmlFor="password">Password</label>
               <Input
-                type="text"
+                type={showPassword ? "text" : "password"}
                 id="password"
                 name="password"
                 value={userData.password}
@@ -189,15 +210,28 @@ const Details = () => {
                 className="shadow-none w-[500px]"
               />
               {errors.password && (
-                <p className="text-red-500">{errors.password}</p>
+                <p className="text-red-500 tex-sm font-semibold mt-2">
+                  {errors.password}
+                </p>
+              )}
+              {showPassword ? (
+                <Eye
+                  onClick={handleTogglePassword}
+                  className="absolute right-2 top-[1.90rem] cursor-pointer text-gray-700 dark:text-gray-200"
+                />
+              ) : (
+                <EyeOff
+                  onClick={handleTogglePassword}
+                  className="absolute right-2 top-[1.90rem] cursor-pointer text-gray-700 dark:text-gray-200"
+                />
               )}
             </div>
-            <div>
+            <div className="relative">
               <label htmlFor="passwordConfirmation">
                 Password confirmation
               </label>
               <Input
-                type="text"
+                type={showPassword ? "text" : "password"}
                 id="passwordConfirmation"
                 name="passwordConfirmation"
                 value={userData.passwordConfirmation}
@@ -205,7 +239,20 @@ const Details = () => {
                 className="shadow-none w-[500px]"
               />
               {errors.password_confirmation && (
-                <p className="text-red-500">{errors.password_confirmation}</p>
+                <p className="text-red-500 tex-sm font-semibold mt-2">
+                  {errors.password_confirmation}
+                </p>
+              )}
+              {showPassword ? (
+                <Eye
+                  onClick={handleTogglePassword}
+                  className="absolute right-2 top-[1.90rem] cursor-pointer text-gray-700 dark:text-gray-200"
+                />
+              ) : (
+                <EyeOff
+                  onClick={handleTogglePassword}
+                  className="absolute right-2 top-[1.90rem] cursor-pointer text-gray-700 dark:text-gray-200"
+                />
               )}
             </div>
           </div>
@@ -250,11 +297,18 @@ const Details = () => {
                   className="shadow-none w-[500px]"
                 />
                 {errors.picture && (
-                  <p className="text-red-500">{errors.picture}</p>
+                  <p className="text-red-500 tex-sm font-semibold mt-2">
+                    {errors.picture}
+                  </p>
                 )}
               </div>
               <div className="flex flex-col items-center w-full gap-y-2">
-                <Button className="w-full" type="submit">
+                <Button
+                  className={`w-full  ${
+                    isLoading ? "opacity-70  cursor-not-allowed" : ""
+                  }`}
+                  type="submit"
+                >
                   {isLoading ? <Loader /> : "Update"}
                 </Button>
                 <Link
