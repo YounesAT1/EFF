@@ -1,8 +1,6 @@
 "use client";
 import CountrySelect, { CountrySelectValue } from "@/components/CountrySelect";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -12,11 +10,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -46,6 +39,10 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { sendEmail } from "@/email/sendEmail";
 import Loader from "@/components/ui/Loader";
+import Link from "next/link";
+import useAuthContext from "@/context/AuthContext";
+import { axiosClient } from "@/api/axios";
+import toast from "react-hot-toast";
 
 export default function BookingForm() {
   const params = useSearchParams();
@@ -57,6 +54,8 @@ export default function BookingForm() {
   const [currentStep, setCurrentStep] = useState(0);
   const [phoneCode, setPhoneCode] = useState<PhoneSelectValue>();
   const [sendingEmail, setSendingEamil] = useState(false);
+
+  const { user } = useAuthContext();
 
   const delta = currentStep - previousStep;
 
@@ -95,6 +94,16 @@ export default function BookingForm() {
       cardNumber: formatCardNumber(data.cardNumber),
     };
 
+    const dataToStoreInTheDataBase = {
+      id: user?.id,
+      from: flightOfferInfos?.outbound?.infos?.departureAirport,
+      to: flightOfferInfos?.outbound?.infos?.arrivalAirport,
+      departure: flightOfferInfos?.departureDate,
+      arrival: flightOfferInfos?.arrivalDate,
+      duration: flightOfferInfos?.outbound?.duration,
+      price: flightOfferInfos.totalPrice,
+    };
+
     try {
       setSendingEamil(true);
       await sendEmail(formattedData, flightOfferInfos);
@@ -106,6 +115,18 @@ export default function BookingForm() {
     }
 
     console.log(formattedData);
+
+    try {
+      const res = await axiosClient.post(
+        "/api/flight-reservation",
+        dataToStoreInTheDataBase
+      );
+      if (res.status === 201) {
+        toast.success(res.data.message);
+      }
+    } catch (err) {
+      console.log(err);
+    }
     form.reset();
   };
 
@@ -122,10 +143,14 @@ export default function BookingForm() {
       shouldFocus: true,
     });
     if (!output) return;
+
+    if (currentStep === steps.length - 2) {
+      // If current step is second-to-last, submit the form
+      await form.handleSubmit(processForm)();
+    }
+
     if (currentStep < steps.length - 1) {
-      if (currentStep === steps.length - 2) {
-        await form.handleSubmit(processForm)();
-      }
+      // Increment step only if it's not the last step
       setPreviousStep(currentStep);
       setCurrentStep((step) => step + 1);
     }
@@ -946,6 +971,20 @@ export default function BookingForm() {
               <Button className=" w-full text-center py-7 bg-indigo-500 hover:bg-indigo-600 text-white rounded  text-3xl">
                 Check your email inbox for the flight ticket invoice
               </Button>
+              <div className="w-full flex items-center justify-between mt-8">
+                <Link
+                  href="/"
+                  className="text-white px-2 py-2 rounded-md bg-slate-800 text-center font-semibold text-xl w-1/3"
+                >
+                  Back to home page
+                </Link>
+                <Link
+                  href={`/dashboard/${user?.id}`}
+                  className="text-white px-2 py-2 rounded-md bg-green-400 text-center font-semibold text-xl w-1/3"
+                >
+                  See dashboard
+                </Link>
+              </div>
             </div>
           )}
 
