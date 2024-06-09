@@ -18,7 +18,7 @@ export const sendEmail = async (formData: any, flightOfferInfos: any) => {
     const fullName = `${formData.firstName} ${formData.lastName}`;
 
     // Generate the PDF content
-    const pdfBlob = await generatePDF(
+    const pdfBlob = generatePDF(
       formData.firstName,
       formData.lastName,
       formData.email,
@@ -37,26 +37,20 @@ export const sendEmail = async (formData: any, flightOfferInfos: any) => {
       flightOfferInfos?.arrivalDate
     );
 
-    // Convert Blob to Buffer
     const pdfBuffer = await blobToBuffer(pdfBlob);
 
-    // Define the directory and file path
     const directory = path.join(process.cwd(), "public", "documents");
-    const fileName = `invoice-${formData.email}.pdf`;
+    const fileName = `invoice-${fullName}.pdf`;
     const filePath = path.join(directory, fileName);
 
-    // Ensure the directory exists
     if (!fs.existsSync(directory)) {
       fs.mkdirSync(directory, { recursive: true });
     }
 
-    // Store the PDF on the server
     fs.writeFileSync(filePath, pdfBuffer);
 
-    // Create a URL for the PDF file
     const pdfUrl = `http://localhost:3000/documents/${fileName}`;
 
-    // Send the email
     await resend.emails.send({
       from: "Trevely <onboarding@resend.dev>",
       to: "youness.monkyde@gmail.com",
@@ -64,8 +58,6 @@ export const sendEmail = async (formData: any, flightOfferInfos: any) => {
       subject: `Hello ${fullName}, here is your reservation details`,
       react: FlightEmail({ formData, flightOfferInfos, pdfUrl }),
     });
-
-    console.log("Email sent successfully.");
   } catch (error) {
     console.error("Error sending email:", error);
   }

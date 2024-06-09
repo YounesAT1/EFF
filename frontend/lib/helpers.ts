@@ -167,3 +167,17 @@ export const formatFormDate = (date: any) => {
   }
   return date;
 };
+
+export function generateFlightNumber() {
+  let flightNumber = "FL";
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  const length = 6; // Length of the flight number excluding the "FL" prefix
+
+  for (let i = 0; i < length; i++) {
+    flightNumber += characters.charAt(
+      Math.floor(Math.random() * characters.length)
+    );
+  }
+
+  return flightNumber;
+}

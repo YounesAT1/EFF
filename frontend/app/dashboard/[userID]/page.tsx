@@ -2,6 +2,7 @@
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/Button";
 import React, { useState } from "react";
+import FlightReservation from "./FlightReservation";
 
 const DashboardPage = () => {
   const [selectedTab, setSelectedTab] = useState("flights");
@@ -12,20 +13,7 @@ const DashboardPage = () => {
 
   const renderTable = () => {
     if (selectedTab === "flights") {
-      return (
-        <table className="table-auto border border-gray-500">
-          {/* Flight table content */}
-          <thead>
-            <tr>
-              <th>Flight Number</th>
-              <th>Departure</th>
-              <th>Destination</th>
-              {/* Add more columns as needed */}
-            </tr>
-          </thead>
-          <tbody>{/* Render flight reservation data rows */}</tbody>
-        </table>
-      );
+      return <FlightReservation />;
     } else if (selectedTab === "hotels") {
       return (
         <table className="table-auto border border-gray-500">
@@ -105,7 +93,9 @@ const DashboardPage = () => {
             Taxis
           </Button>
         </div>
-        <div className="mt-8">{renderTable()}</div>
+        <div className="mt-8 flex items-center justify-center">
+          {renderTable()}
+        </div>
       </div>
     </>
   );

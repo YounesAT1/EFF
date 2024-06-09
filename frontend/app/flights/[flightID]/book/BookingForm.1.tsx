@@ -31,6 +31,7 @@ import {
   decodeData,
   formatCardNumber,
   formatFormDate,
+  generateFlightNumber,
   getCardType,
   months,
   steps,
@@ -82,6 +83,7 @@ export default function BookingForm() {
 
   type Inputs = z.infer<typeof BookingFormSchema>;
   type FieldName = keyof Inputs;
+
   const processForm: SubmitHandler<z.infer<typeof BookingFormSchema>> = async (
     data
   ) => {
@@ -94,39 +96,43 @@ export default function BookingForm() {
       cardNumber: formatCardNumber(data.cardNumber),
     };
 
+    const flightNumber = generateFlightNumber();
+    const currentDate = new Date().toISOString().slice(0, 19).replace("T", " ");
+
     const dataToStoreInTheDataBase = {
       id: user?.id,
+      flightNumber: flightNumber,
       from: flightOfferInfos?.outbound?.infos?.departureAirport,
       to: flightOfferInfos?.outbound?.infos?.arrivalAirport,
       departure: flightOfferInfos?.departureDate,
       arrival: flightOfferInfos?.arrivalDate,
       duration: flightOfferInfos?.outbound?.duration,
       price: flightOfferInfos.totalPrice,
+      reservation_date: currentDate,
     };
 
     try {
       setSendingEamil(true);
       await sendEmail(formattedData, flightOfferInfos);
-      console.log("Email sent and form submitted successfully");
+      console.log("Email sent successfully");
+
+      try {
+        const res = await axiosClient.post(
+          "/api/flight-reservation",
+          dataToStoreInTheDataBase
+        );
+        if (res.status === 201) {
+          toast.success(res.data.message);
+        }
+      } catch (err) {
+        console.log("Error posting data to the database:", err);
+      }
     } catch (error) {
       console.error("Error sending email:", error);
     } finally {
       setSendingEamil(false);
     }
 
-    console.log(formattedData);
-
-    try {
-      const res = await axiosClient.post(
-        "/api/flight-reservation",
-        dataToStoreInTheDataBase
-      );
-      if (res.status === 201) {
-        toast.success(res.data.message);
-      }
-    } catch (err) {
-      console.log(err);
-    }
     form.reset();
   };
 
@@ -144,16 +150,20 @@ export default function BookingForm() {
     });
     if (!output) return;
 
-    if (currentStep === steps.length - 2) {
-      // If current step is second-to-last, submit the form
-      await form.handleSubmit(processForm)();
-    }
-
     if (currentStep < steps.length - 1) {
-      // Increment step only if it's not the last step
       setPreviousStep(currentStep);
       setCurrentStep((step) => step + 1);
     }
+  };
+
+  const book = async () => {
+    const fields = steps[currentStep].fields;
+    const output = await form.trigger(fields as FieldName[], {
+      shouldFocus: true,
+    });
+    if (!output) return;
+
+    await form.handleSubmit(processForm)();
   };
 
   const cardType =
@@ -997,20 +1007,17 @@ export default function BookingForm() {
               Previous
             </Button>
             {currentStep !== steps.length - 1 && (
-              <Button
-                onClick={next}
-                className={
-                  currentStep === steps.length - 1 ? "hidden" : "block"
-                }
-              >
-                {sendingEmail ? (
-                  <Loader />
-                ) : currentStep === steps.length - 2 ? (
-                  "Book"
+              <>
+                {currentStep === steps.length - 2 ? (
+                  <Button onClick={book} className="block">
+                    {sendingEmail ? <Loader /> : "Book"}
+                  </Button>
                 ) : (
-                  "Next"
+                  <Button onClick={next} className="block">
+                    {sendingEmail ? <Loader /> : "Next"}
+                  </Button>
                 )}
-              </Button>
+              </>
             )}
           </div>
         </form>
