@@ -16,3 +16,4 @@ Route::middleware('auth')->prefix('/user')->group(function () {
 });
 
 Route::post('/flight-reservation', [FlightReservationController::class, 'store']);
+Route::get('/reservation', [FlightReservationController::class, 'showFlightReservationList']);

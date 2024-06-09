@@ -11,7 +11,7 @@ class FlightReservation extends Model
 
     protected $table = 'flight_reservations';
     protected $primaryKey = 'id';
-    protected $fillable = ['user_id', 'from', 'to', 'departure', 'arrival', 'duration', 'price'];
+    protected $fillable = ['user_id', 'from', 'to', 'departure', 'arrival', 'duration', 'price', 'flightNumber','reservation_date'];
 
 
     public function user () {
